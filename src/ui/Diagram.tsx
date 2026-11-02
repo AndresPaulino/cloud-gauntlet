@@ -16,7 +16,8 @@ const GROUP_STYLE: Record<DiagramGroup['kind'], { stroke: string; fill: string; 
   generic: { stroke: '#7d8998', fill: 'transparent', label: '#5f6b7a' },
 };
 
-export function Diagram({ diagram, compact }: { diagram: D; compact?: boolean }) {
+/** `onStep` reports the furthest step reached, so a lesson can wait until the whole diagram has been seen. */
+export function Diagram({ diagram, compact, onStep }: { diagram: D; compact?: boolean; onStep?: (step: number, total: number) => void }) {
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
   const s = diagram.steps[step] ?? diagram.steps[0];
@@ -26,6 +27,7 @@ export function Diagram({ diagram, compact }: { diagram: D; compact?: boolean })
   const anyHl = hl.size > 0;
 
   useEffect(() => { setStep(0); }, [diagram]);
+  useEffect(() => { onStep?.(step, diagram.steps.length); }, [step, diagram.steps.length]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!playing) return;
     const h = setTimeout(() => (step < diagram.steps.length - 1 ? setStep(step + 1) : setPlaying(false)), 3200);

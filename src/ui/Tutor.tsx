@@ -8,21 +8,34 @@ import { Md } from './Md';
 interface Msg { role: 'user' | 'assistant'; content: string }
 interface TutorUi {
   isOpen: boolean; context: string; contextLabel: string; messages: Msg[]; draft: string;
-  open: (prompt?: string) => void; close: () => void; setContext: (label: string, text: string) => void; setMessages: (m: Msg[]) => void; setDraft: (d: string) => void;
+  /** A question to send as soon as the drawer is ready (from "Ask AI about this"). */
+  pending: string;
+  open: (prompt?: string) => void; ask: (question: string) => void; close: () => void; setContext: (label: string, text: string) => void; setMessages: (m: Msg[]) => void; setDraft: (d: string) => void;
 }
 export const useTutor = create<TutorUi>((set) => ({
-  isOpen: false, context: '', contextLabel: '', messages: [], draft: '',
+  isOpen: false, context: '', contextLabel: '', messages: [], draft: '', pending: '',
   open: (prompt) => set((s) => ({ isOpen: true, draft: prompt ?? s.draft })),
+  ask: (question) => set({ isOpen: true, pending: question }),
   close: () => set({ isOpen: false }),
   setContext: (contextLabel, context) => set({ contextLabel, context }),
   setMessages: (messages) => set({ messages }),
   setDraft: (draft) => set({ draft }),
 }));
 
-/** Register what the learner is looking at; cleared on unmount. */
+// Contexts nest (a lesson page holds a question card), so keep a stack: when the inner one
+// unmounts, the outer one comes back instead of the tutor going blind.
+const ctxStack: { label: string; text: string }[] = [];
+const showTop = () => { const top = ctxStack.at(-1); useTutor.getState().setContext(top?.label ?? '', top?.text ?? ''); };
+
+/** Register what the learner is looking at; restored to the enclosing context on unmount. */
 export function useTutorContext(label: string, text: string) {
-  const setContext = useTutor((s) => s.setContext);
-  useEffect(() => { setContext(label, text); return () => setContext('', ''); }, [label, text, setContext]);
+  useEffect(() => {
+    if (!label && !text) return;
+    const entry = { label, text };
+    ctxStack.push(entry);
+    showTop();
+    return () => { ctxStack.splice(ctxStack.lastIndexOf(entry), 1); showTop(); };
+  }, [label, text]);
 }
 
 let statusCache: boolean | null = null;
@@ -46,6 +59,12 @@ export function TutorDrawer() {
 
   useEffect(() => { if (t.isOpen) void tutorEnabled().then(setEnabled); }, [t.isOpen]);
   useEffect(() => { scroller.current?.scrollTo({ top: scroller.current.scrollHeight }); }, [t.messages]);
+  useEffect(() => {
+    if (!t.pending || enabled === null || busy) return;
+    const q = t.pending;
+    useTutor.setState({ pending: '' });
+    if (enabled) void send(q); else t.setDraft(q);
+  }, [t.pending, enabled, busy]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function send(text: string) {
     if (!text.trim() || busy) return;

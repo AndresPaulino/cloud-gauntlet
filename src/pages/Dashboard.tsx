@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useStore, today } from '../store/store';
 import { outline, getLesson, flashcards, DOMAINS, modules } from '../content';
 import { readiness, rankOf, BADGES } from '../lib/gamify';
+import { companyStats } from '../lib/company';
+import { Building } from './Company';
 import { studyPlan } from '../lib/adaptive';
 import { PASS } from '../lib/scoring';
 import { Panel, Bar, Btn } from '../ui/bits';
@@ -52,6 +54,7 @@ export default function Dashboard() {
   const nextLab = labs.find((l) => !p.labs[l.id]?.completedAt);
   const recentBadges = Object.entries(p.badges).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([id]) => BADGES.find((b) => b.id === id)).filter(Boolean);
   const missed = Object.values(p.questions).filter((q) => !q.lastCorrect).length;
+  const co = companyStats(p);
 
   return (
     <div className="space-y-6">
@@ -84,6 +87,19 @@ export default function Dashboard() {
           <div className="relative"><h2 className="font-display text-3xl font-extrabold">Every lesson done.</h2><p className="text-paper/80 mt-1">Now beat the final boss twice at 750+ to be exam-ready.</p><Btn kind="xp" to="/exam" className="mt-4">Go to the final boss</Btn></div>
         )}
       </section>
+
+      <Link to="/company" className="flex items-center gap-4 rounded-2xl border border-line bg-surface px-5 py-3 hover:bg-sunk">
+        <Building floors={co.floors} litToday={Math.min(1, (p.activeDays[today()] ?? 0) / 150)} ipo={co.ipo} className="h-14 w-10 shrink-0" />
+        <div className="min-w-0">
+          <div className="font-display font-bold">{co.name} <span className="font-normal text-muted text-sm">· {co.hq}</span></div>
+          <div className="text-sm text-muted truncate">{co.chapter.title}</div>
+        </div>
+        <div className="ml-auto flex gap-5 text-right tabular-nums">
+          <div><div className="font-bold">{co.users.toLocaleString()}</div><div className="text-xs text-muted">users</div></div>
+          <div className="hidden sm:block"><div className="font-bold">{co.customers.toLocaleString()}</div><div className="text-xs text-muted">customers</div></div>
+          <div><div className="font-bold">${co.price.toFixed(2)} <span className={co.change7d >= 0 ? 'text-ok' : 'text-bad'}>{co.change7d >= 0 ? '▲' : '▼'}</span></div><div className="text-xs text-muted">stock</div></div>
+        </div>
+      </Link>
 
       <div className="grid lg:grid-cols-3 gap-6">
         <Panel title="Exam readiness" className="lg:col-span-2" action={<Link to="/exam" className="underline">Take a mock exam</Link>}>

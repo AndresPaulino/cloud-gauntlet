@@ -15,7 +15,7 @@ export interface Attempt {
   questionIds: string[]; answers: (number[] | null)[]; flags: boolean[];
   correct: number; scaled?: number; perDomain?: Partial<Record<DomainId, { correct: number; total: number }>>;
 }
-export interface Profile { name: string; examDate: string; hoursPerWeek: number; startedAt: string; tutorModel: 'sonnet' | 'opus'; theme: 'light' | 'dark'; onboarded: boolean }
+export interface Profile { name: string; examDate: string; hoursPerWeek: number; startedAt: string; tutorModel: 'sonnet' | 'opus'; theme: 'light' | 'dark'; onboarded: boolean; company?: string }
 
 export interface Progress {
   version: 1;
@@ -25,13 +25,15 @@ export interface Progress {
   xpLog: { t: number; amount: number; reason: string }[];
   streak: { current: number; best: number; lastDay: string; freezesUsedWeek: string };
   activeDays: Record<string, number>; // 'YYYY-MM-DD' -> xp earned that day
-  lessons: Record<string, { completedAt?: number; visitedAt: number; stepsSeen?: number }>;
+  lessons: Record<string, { completedAt?: number; visitedAt: number; stepsSeen?: number; piece?: number }>;
   questions: Record<string, QuestionStat>;
   cards: Record<string, CardStat>;
   attempts: Attempt[];
   labs: Record<string, { completedAt?: number; startedAt: number }>;
   scenarios: Record<string, { best: number; completedAt?: number }>;
   badges: Record<string, number>;
+  /** Finished Pomodoro focus sessions. */
+  focusSessions: number;
   cloud: CloudState;
 }
 
@@ -43,7 +45,7 @@ export function freshProgress(): Progress {
     version: 1, updatedAt: 0,
     profile: { name: '', examDate: '2026-12-31', hoursPerWeek: 8, startedAt: today(), tutorModel: 'sonnet', theme: 'light', onboarded: false },
     xp: 0, xpLog: [], streak: { current: 0, best: 0, lastDay: '', freezesUsedWeek: '' }, activeDays: {},
-    lessons: {}, questions: {}, cards: {}, attempts: [], labs: {}, scenarios: {}, badges: {},
+    lessons: {}, questions: {}, cards: {}, attempts: [], labs: {}, scenarios: {}, badges: {}, focusSessions: 0,
     cloud: seedCloud(),
   };
 }
@@ -54,6 +56,9 @@ interface Actions {
   setProfile: (p: Partial<Profile>) => void;
   visitLesson: (id: string) => void;
   completeLesson: (id: string) => void;
+  /** Remember how far through a lesson's pieces the learner is. */
+  setLessonPiece: (id: string, piece: number) => void;
+  completeFocus: () => void;
   recordAnswer: (qid: string, correct: boolean) => void;
   toggleFlag: (qid: string) => void;
   reviewCard: (cardId: string, grade: 0 | 1 | 2 | 3) => void;
@@ -114,6 +119,8 @@ export const useStore = create<Store>()(
           touch({ lessons: { ...l, [id]: { ...l[id], visitedAt: Date.now(), completedAt: Date.now() } } });
           get().award(50, 'Lesson complete');
         },
+        setLessonPiece: (id, piece) => { const l = get().lessons; if (l[id]?.piece === piece) return; touch({ lessons: { ...l, [id]: { ...l[id], visitedAt: l[id]?.visitedAt ?? Date.now(), piece } } }); },
+        completeFocus: () => { touch({ focusSessions: (get().focusSessions ?? 0) + 1 }); get().award(15, 'Focus session'); },
         recordAnswer: (qid, correct) => {
           const q = get().questions[qid] ?? { seen: 0, correct: 0, lastAt: 0, lastCorrect: false, box: 0 };
           const first = q.seen === 0;
@@ -173,7 +180,7 @@ export const useStore = create<Store>()(
       name: 'cloud-gauntlet',
       version: 1,
       partialize: (s) => {
-        const { award, setProfile, visitLesson, completeLesson, recordAnswer, toggleFlag, reviewCard, saveAttempt, startLab, completeLab, scoreScenario, earnBadge, mutateCloud, put, patch, remove, logEvent, resetCloud, replaceAll, ...data } = s;
+        const { award, setProfile, visitLesson, completeLesson, setLessonPiece, completeFocus, recordAnswer, toggleFlag, reviewCard, saveAttempt, startLab, completeLab, scoreScenario, earnBadge, mutateCloud, put, patch, remove, logEvent, resetCloud, replaceAll, ...data } = s;
         return data;
       },
     },

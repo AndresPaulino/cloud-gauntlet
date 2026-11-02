@@ -5,10 +5,13 @@ import { rankOf } from '../lib/gamify';
 import { onSyncStatus, getSyncStatus, type SyncStatus } from '../store/sync';
 import { TutorDrawer, useTutor } from './Tutor';
 import { Toaster } from './Celebrate';
+import { AskSelection } from './AskSelection';
+import { FocusTimer, useFocus } from './Focus';
 
 const NAV: { to: string; label: string; icon: string }[] = [
   { to: '/', label: 'Base camp', icon: '⛺' },
   { to: '/path', label: 'The Gauntlet', icon: '🗺️' },
+  { to: '/company', label: 'Your startup', icon: '🏢' },
   { to: '/console', label: 'AWS Console', icon: '🖥️' },
   { to: '/labs', label: 'Labs', icon: '🧪' },
   { to: '/builder', label: 'Architect', icon: '📐' },
@@ -29,11 +32,12 @@ export function Layout({ children }: { children: ReactNode }) {
   const [sync, setSync] = useState<SyncStatus>(getSyncStatus());
   const [navOpen, setNavOpen] = useState(false);
   const tutor = useTutor();
+  const focusing = useFocus((s) => s.phase === 'focus');
   useEffect(() => { const off = onSyncStatus(setSync); return () => { off(); }; }, []);
 
   return (
     <div className="min-h-full flex">
-      <aside className={`fixed inset-y-0 left-0 z-40 w-60 bg-surface border-r border-line flex flex-col transition-transform lg:translate-x-0 ${navOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-40 w-60 bg-surface border-r border-line flex flex-col transition-transform ${focusing ? '' : 'lg:translate-x-0'} ${navOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Link to="/" className="px-5 pt-5 pb-4 block" onClick={() => setNavOpen(false)}>
           <div className="font-display text-[22px] font-extrabold leading-none tracking-tight">Cloud Gauntlet</div>
           <div className="text-xs text-muted mt-1">Zero to SAA-C03</div>
@@ -55,12 +59,12 @@ export function Layout({ children }: { children: ReactNode }) {
           </button>
         </div>
       </aside>
-      {navOpen && <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setNavOpen(false)} />}
+      {navOpen && <div className={`fixed inset-0 z-30 bg-black/30 ${focusing ? '' : 'lg:hidden'}`} onClick={() => setNavOpen(false)} />}
 
-      <div className="flex-1 min-w-0 lg:pl-60 flex flex-col">
+      <div className={`flex-1 min-w-0 flex flex-col ${focusing ? '' : 'lg:pl-60'}`}>
         <header className="sticky top-0 z-20 bg-paper/90 backdrop-blur border-b border-line">
           <div className="flex items-center gap-3 px-4 lg:px-8 h-14">
-            <button className="lg:hidden px-2 py-1 rounded hover:bg-sunk" onClick={() => setNavOpen(true)} aria-label="Open menu">☰</button>
+            <button className={`${focusing ? '' : 'lg:hidden'} px-2 py-1 rounded hover:bg-sunk`} onClick={() => setNavOpen(true)} aria-label="Open menu">☰</button>
             <Link to="/profile" className="flex items-center gap-3 min-w-0 group" title="Your rank and badges">
               <span className="grid place-items-center w-8 h-8 rounded-full bg-xp text-[#1b1200] font-display font-extrabold text-sm shrink-0">{rank.level}</span>
               <span className="min-w-0 hidden sm:block">
@@ -72,6 +76,7 @@ export function Layout({ children }: { children: ReactNode }) {
               </span>
             </Link>
             <div className="ml-auto flex items-center gap-2">
+              <FocusTimer />
               <span className="text-sm tabular-nums px-2.5 py-1 rounded-full bg-surface border border-line" title={`Best streak: ${streak.best} days. One missed day per week is forgiven.`}>
                 🔥 {streak.current} day{streak.current === 1 ? '' : 's'}
               </span>
@@ -84,6 +89,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <main className="flex-1 px-4 lg:px-8 py-6 lg:py-8 max-w-[1200px] w-full mx-auto">{children}</main>
       </div>
       <TutorDrawer />
+      <AskSelection />
       <Toaster />
     </div>
   );

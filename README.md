@@ -28,6 +28,10 @@ While `npm run dev` runs, everything you do saves automatically to **`progress/p
 | Area | What it does |
 |---|---|
 | **The Gauntlet** | A 69-waypoint trail through 6 modules built from your cheat sheets. Each lesson has an analogy, an animated step-through diagram, sections, trade-off tables, key facts, exam tips, traps, a console lab and a 5-question check. Content beyond the PDFs is labelled *beyond your cheat sheets*. |
+| **Lessons, one piece at a time** | Each lesson is shown as short pieces. Finished pieces collapse to one line (click to reread), quick checks sit right after the section they test, the diagram has to be stepped through, a progress bar shows minutes left, and any piece can be read aloud. Your place is saved. |
+| **Your startup** | You're the founding architect of a ticketing startup (rename it on the page). Lessons, labs and correct answers bring in users and customers; study days push the stock up and skipped days let it slide; the HQ gains floors; each module is a story chapter, ending in an IPO when you beat the final boss. |
+| **Focus timer** | 🍅 in the header: a 25/5 or 50/10 Pomodoro. The sidebar hides while you focus; each finished block is +15 XP. |
+| **Ask AI about this** | Highlight any text and click the popup to send it (with its surrounding sentence) straight to the tutor. Good for abbreviations. |
 | **Mock AWS Console** | A Cloudscape-style simulation of 15 services (EC2 + ELB + Auto Scaling, VPC, S3, IAM, KMS, RDS, DynamoDB, Lambda, API Gateway, SQS, SNS, Route 53, CloudFront, CloudWatch, Billing). Resources persist. A live **cost meter** shows what's burning money. Includes the **Reachability Analyzer** (traces SG → NACL → routes → gateways), the IAM **policy simulator**, a Route 53 resolver, an ASG load slider and RDS failover. |
 | **Labs** | 19 guided labs, docked beside the console, whose steps tick off live as you build. |
 | **Architect** | 20 real-world briefs. Drag services onto a canvas, connect them, and get graded against the Well-Architected pillars, with a reference solution and trade-offs. Plus a free sandbox. |
@@ -37,7 +41,7 @@ While `npm run dev` runs, everything you do saves automatically to **`progress/p
 | **Flashcards** | 414 cards on spaced repetition (Again/Hard/Good/Easy, keyboard 1–4). |
 | **Service atlas** | 167 services and features: when to use, when not to, how it bills, exam signal phrases. |
 | **Study plan** | Spreads the remaining lessons across the weeks to your exam date, keeps a mock-exam buffer week, and re-plans when you fall behind. |
-| **Gamification** | XP, 11 AWS-themed ranks, a daily streak (one free miss per week), 37 badges, bosses and a readiness score. |
+| **Gamification** | XP, 11 AWS-themed ranks, a daily streak (one free miss per week), 38 badges, bosses and a readiness score. |
 
 ## Project layout
 

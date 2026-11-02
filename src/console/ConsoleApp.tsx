@@ -10,6 +10,8 @@ import { ServiceIcon } from '../ui/ServiceIcon';
 import { LabDrawer, useActiveLab } from './LabDrawer';
 import { ConsoleHome } from './ConsoleHome';
 import { TutorDrawer, useTutor, useTutorContext } from '../ui/Tutor';
+import { AskSelection } from '../ui/AskSelection';
+import { FocusTimer } from '../ui/Focus';
 import { Toaster } from '../ui/Celebrate';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
 
@@ -66,6 +68,7 @@ export default function ConsoleApp() {
         </div>
         <div className="ml-auto flex items-center gap-1">
           <span className="hidden lg:inline whitespace-nowrap px-2 py-0.5 rounded bg-[#0f1b2a] border border-[#5f6b7a] tabular-nums" title="Simulated: what everything running in this account costs per hour, right now">💸 {usd(burn, 3)}/hr · MTD {usd(cloud.accruedUsd)}</span>
+          <span className="text-[#000716] hidden md:inline"><FocusTimer /></span>
           <button onClick={() => tutor.open()} className="px-2 py-1 rounded hover:bg-white/10 whitespace-nowrap" title="Ask the tutor about this console page">🎓 Tutor</button>
           {isGlobal ? <span className="px-2 py-1 text-[#d1d5db]" title="This service is global, not Regional">Global</span> : (
             <select value={cloud.region} onChange={(e) => mutate((c) => { c.region = e.target.value; })} className="bg-transparent hover:bg-white/10 rounded px-1 py-1 max-w-[150px] lg:max-w-none" aria-label="Region">
@@ -102,6 +105,7 @@ export default function ConsoleApp() {
         {lab && <LabDrawer labId={lab} />}
       </div>
       <TutorDrawer />
+      <AskSelection />
       <Toaster />
     </div>
   );

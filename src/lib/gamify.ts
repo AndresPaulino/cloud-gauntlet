@@ -91,6 +91,7 @@ export const BADGES: BadgeDef[] = [
   { id: 'century', name: 'Century', desc: 'Answer 100 questions.', icon: '💯', check: (p) => Object.keys(p.questions).length >= 100 },
   { id: 'question-hoard', name: 'Bank Breaker', desc: 'Answer every question in the bank at least once.', icon: '🏦', check: (p) => questionMap.size > 0 && [...questionMap.keys()].every((id) => p.questions[id]) },
   { id: 'card-shark', name: 'Card Shark', desc: 'Review 200 flashcards.', icon: '🃏', check: (p) => Object.values(p.cards).reduce((a, c) => a + c.reps, 0) >= 200 },
+  { id: 'deep-work', name: 'Deep Work', desc: 'Finish 10 Pomodoro focus blocks.', icon: '🍅', check: (p) => (p.focusSessions ?? 0) >= 10 },
   { id: 'streak-7', name: 'Week Warrior', desc: 'Keep a 7-day streak.', icon: '🔥', check: (p) => p.streak.best >= 7 },
   { id: 'streak-30', name: 'Unbreakable', desc: 'Keep a 30-day streak.', icon: '☄️', check: (p) => p.streak.best >= 30 },
   { id: 'architect', name: 'Drawing Board', desc: 'Score 80%+ on an architecture scenario.', icon: '📐', check: (p) => Object.values(p.scenarios).some((s) => s.best >= 80) },
