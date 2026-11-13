@@ -1,6 +1,8 @@
 # Cloud Gauntlet
 
-A local, offline web app that takes you from zero to passing the **AWS Certified Solutions Architect – Associate (SAA-C03)** exam, with no AWS account needed.
+A web app that takes you from zero to passing the **AWS Certified Solutions Architect – Associate (SAA-C03)** exam, with no AWS account needed.
+
+**Use it in your browser:** https://andrespaulino.github.io/cloud-gauntlet/ (no install, no sign-up; progress is saved in your browser). Or run it locally:
 
 ## Start
 
@@ -18,6 +20,15 @@ Open http://localhost:5173. Requires Node 20.19+ (tested on Node 24).
 3. Restart `npm run dev`.
 
 The key stays on your machine. The browser calls the local dev server (`server/devApi.ts`), and the dev server calls Claude. Pick **Sonnet 5.5** (fast and cheap) or **Opus 5.5** (deepest explanations) in the tutor panel. The tutor sees what you're working on: the lesson, the question you just missed, the lab step you're stuck on, or the console page you have open.
+
+### The hosted site (GitHub Pages)
+
+Every push to `main` builds the app and publishes it (`.github/workflows/pages.yml`). One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
+
+On the hosted site there is no server, so:
+
+- **Progress** lives in the visitor's browser storage. **Profile → Download backup / Restore from backup** moves it between browsers.
+- **The AI tutor** is optional and uses the visitor's own Anthropic API key, pasted into the tutor panel. The key is stored only in that browser and sent only to Anthropic. Anything else running in the browser could read it, so use a separate key with a low spend limit and remove it when done. Running locally keeps the key in `.env` instead.
 
 ### Carrying your progress between computers
 

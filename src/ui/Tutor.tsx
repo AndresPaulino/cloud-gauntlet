@@ -1,4 +1,5 @@
-// "Ask the tutor": a drawer that streams answers from the local /api/tutor proxy.
+// "Ask the tutor": a drawer that streams answers from the local /api/tutor proxy, or, on the hosted
+// static site (no dev server), straight from the browser with an API key the visitor pastes in.
 // Pages call setTutorContext(...) so the tutor knows what you're looking at.
 import { useEffect, useRef, useState } from 'react';
 import { create } from 'zustand';
@@ -38,26 +39,38 @@ export function useTutorContext(label: string, text: string) {
   }, [label, text]);
 }
 
-let statusCache: boolean | null = null;
-async function tutorEnabled(): Promise<boolean> {
-  if (statusCache !== null) return statusCache;
+// Hosted site only: the visitor's own key. It lives in this browser's storage and is sent only to Anthropic.
+const KEY_STORE = 'cloud-gauntlet-tutor-key';
+const readKey = () => { try { return localStorage.getItem(KEY_STORE) ?? ''; } catch { return ''; } };
+const writeKey = (k: string) => { try { if (k) localStorage.setItem(KEY_STORE, k); else localStorage.removeItem(KEY_STORE); } catch { /* storage blocked: key lasts for this page only */ } };
+
+/** `hosted` = no dev server (static site): the tutor uses the visitor's key. Otherwise the server says if .env has one. */
+let statusCache: { hosted: boolean; serverEnabled: boolean } | null = null;
+async function tutorStatus() {
+  if (statusCache) return statusCache;
   try {
     const r = await fetch('/api/tutor/status');
-    statusCache = r.ok && (r.headers.get('content-type') ?? '').includes('json') ? (await r.json()).enabled : false;
-  } catch { statusCache = false; }
-  return statusCache!;
+    const isApi = r.ok && (r.headers.get('content-type') ?? '').includes('json');
+    statusCache = { hosted: !isApi, serverEnabled: isApi ? !!(await r.json()).enabled : false };
+  } catch { statusCache = { hosted: true, serverEnabled: false }; }
+  return statusCache;
 }
 
 export function TutorDrawer() {
   const t = useTutor();
   const model = useStore((s) => s.profile.tutorModel);
   const setProfile = useStore((s) => s.setProfile);
-  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<{ hosted: boolean; serverEnabled: boolean } | null>(null);
+  const [key, setKey] = useState(readKey);
+  const [keyDraft, setKeyDraft] = useState('');
+  const hosted = !!status?.hosted;
+  const enabled = status === null ? null : hosted ? !!key : status.serverEnabled;
+  const saveKey = (k: string) => { writeKey(k); setKey(k); setKeyDraft(''); };
   const [busy, setBusy] = useState(false);
   const abort = useRef<AbortController | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { if (t.isOpen) void tutorEnabled().then(setEnabled); }, [t.isOpen]);
+  useEffect(() => { if (t.isOpen) void tutorStatus().then(setStatus); }, [t.isOpen]);
   useEffect(() => { scroller.current?.scrollTo({ top: scroller.current.scrollHeight }); }, [t.messages]);
   useEffect(() => {
     if (!t.pending || enabled === null || busy) return;
@@ -74,9 +87,20 @@ export function TutorDrawer() {
     setBusy(true);
     abort.current = new AbortController();
     try {
+      const body = { model, context: t.context ? `[${t.contextLabel}]
+${t.context}` : '', messages: history };
+      let acc = '';
+      const onText = (chunk: string) => { acc += chunk; t.setMessages([...history, { role: 'assistant', content: acc }]); };
+      if (hosted) {
+        // Loaded on demand so the SDK stays out of the main bundle.
+        const core = await import('../lib/tutorCore');
+        try { await core.streamTutor(core.browserClient(key), body, onText, abort.current.signal); }
+        catch (e) { if (abort.current.signal.aborted) return; throw new Error(core.tutorError(e, 'That API key was rejected. Remove it below and paste a valid one.')); }
+        return;
+      }
       const r = await fetch('/api/tutor', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: abort.current.signal,
-        body: JSON.stringify({ model, context: t.context ? `[${t.contextLabel}]\n${t.context}` : '', messages: history }),
+        body: JSON.stringify(body),
       });
       if (!r.ok || !r.body) {
         const err = await r.json().catch(() => ({ error: `HTTP ${r.status}` }));
@@ -84,12 +108,10 @@ export function TutorDrawer() {
       }
       const reader = r.body.getReader();
       const dec = new TextDecoder();
-      let acc = '';
       for (;;) {
         const { done, value } = await reader.read();
         if (done) break;
-        acc += dec.decode(value, { stream: true });
-        t.setMessages([...history, { role: 'assistant', content: acc }]);
+        onText(dec.decode(value, { stream: true }));
       }
     } catch (e) {
       if ((e as Error).name !== 'AbortError') t.setMessages([...history, { role: 'assistant', content: `**Couldn't reach the tutor:** ${(e as Error).message}` }]);
@@ -118,11 +140,27 @@ export function TutorDrawer() {
         </div>
         {t.contextLabel && <div className="px-4 py-2 text-xs text-muted border-b border-line bg-sunk">Looking at: <b className="text-ink">{t.contextLabel}</b></div>}
         <div ref={scroller} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          {enabled === false && (
+          {enabled === false && hosted && (
+            <form className="rounded-lg border border-line p-4 text-sm prose-lite" onSubmit={(e) => { e.preventDefault(); if (keyDraft.trim()) saveKey(keyDraft.trim()); }}>
+              <p><b>The tutor is optional and runs on your own Anthropic API key.</b> Everything else in Cloud Gauntlet works without it.</p>
+              <label className="block mt-2">
+                <span className="block text-xs text-muted mb-1">Anthropic API key</span>
+                <input type="password" autoComplete="off" spellCheck={false} value={keyDraft} onChange={(e) => setKeyDraft(e.target.value)} placeholder="sk-ant-..."
+                  className="w-full rounded-lg border border-line bg-paper px-3 py-2 font-mono text-[13px]" />
+              </label>
+              <button type="submit" disabled={!keyDraft.trim()} className="mt-2 px-3 py-1.5 rounded-lg bg-ink text-paper font-medium disabled:opacity-40">Save key in this browser</button>
+              <ul className="text-muted mt-3">
+                <li>The key is stored only in this browser and sent only to Anthropic. This site has no server.</li>
+                <li>Anything else running in this browser (extensions, other people on a shared computer) could read it. Use a separate key with a low spend limit, and remove it when you are done.</li>
+                <li>Prefer not to paste a key? Clone the repo and run it locally: the key then stays in a <code>.env</code> file on your machine.</li>
+              </ul>
+            </form>
+          )}
+          {enabled === false && !hosted && (
             <div className="rounded-lg border border-line p-4 text-sm prose-lite">
               <p><b>The tutor needs your Anthropic API key.</b></p>
               <p>1. Copy <code>.env.example</code> to <code>.env</code> in the project folder.<br />2. Paste your key after <code>ANTHROPIC_API_KEY=</code>.<br />3. Restart <code>npm run dev</code>.</p>
-              <p className="text-muted">The key stays on your machine: the local dev server calls Claude, so your browser never sees it. Hosted static copies of the app have no tutor.</p>
+              <p className="text-muted">The key stays on your machine: the local dev server calls Claude, so your browser never sees it.</p>
             </div>
           )}
           {t.messages.length === 0 && enabled !== false && <p className="text-sm text-muted">Ask anything about AWS or the exam. I can see the lesson, question or lab you have open.</p>}
@@ -133,6 +171,7 @@ export function TutorDrawer() {
           ))}
         </div>
         <div className="border-t border-line p-3">
+          {hosted && key && <div className="text-xs text-muted mb-2 flex items-center gap-2">Using your API key, stored in this browser.<button type="button" className="underline" onClick={() => saveKey('')}>Remove key</button></div>}
           {t.messages.length === 0 && (
             <div className="flex flex-wrap gap-1.5 mb-2">
               {quick.map((q) => <button key={q} onClick={() => send(q)} disabled={enabled === false} className="text-xs px-2.5 py-1 rounded-full border border-line hover:bg-sunk disabled:opacity-40">{q}</button>)}
