@@ -1,0 +1,2813 @@
+{
+ "version": 1,
+ "updatedAt": 1795152513238,
+ "profile": {
+  "name": "Paulino",
+  "examDate": "2026-12-31",
+  "hoursPerWeek": 8,
+  "startedAt": "2026-10-30",
+  "tutorModel": "sonnet",
+  "theme": "dark",
+  "onboarded": true
+ },
+ "xp": 2945,
+ "xpLog": [
+  {
+   "t": 1795152258683,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795152230719,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795151963496,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795150743655,
+   "amount": 50,
+   "reason": "Boss attempt"
+  },
+  {
+   "t": 1795150743655,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743655,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795150743655,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743654,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795150743654,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743654,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795150743653,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743653,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743653,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743652,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795150743652,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795150743651,
+   "amount": 3,
+   "reason": "Correct (review)"
+  },
+  {
+   "t": 1795149922619,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1795149090246,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1795149090240,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1795148439754,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795148359055,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795148117136,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1795148117128,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1795147937244,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795147534828,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795147470994,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795146348364,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1795146154930,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1795146014205,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795145797264,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795145788541,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795145574259,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795095942642,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1795095928548,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1795095900854,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795095834463,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795095359042,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795095298295,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1795095250893,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794870036151,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794870025136,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1794870025136,
+   "amount": 100,
+   "reason": "Lab complete"
+  },
+  {
+   "t": 1794869644051,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794868277943,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794868215095,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794867669201,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794867091823,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794866954399,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794866544629,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794866266068,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794866013394,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794864868302,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794594068698,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794578303094,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794578006513,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794577847651,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794577592296,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794577554164,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794577200653,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794541519785,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541511233,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541489968,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541456655,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541444475,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541429080,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541414179,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541403733,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541389097,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541345039,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541334647,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541313437,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541292611,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541282580,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541267808,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541254842,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541243596,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541229954,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541205354,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541198914,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541172324,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541150407,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541127304,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541109400,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541090236,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541070889,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541045609,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541035667,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541029985,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794541006654,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540986219,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540938286,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540921630,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540895699,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540874848,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540861584,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540855236,
+   "amount": 2,
+   "reason": "Flashcard review"
+  },
+  {
+   "t": 1794540793007,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794540745732,
+   "amount": 100,
+   "reason": "Lab complete"
+  },
+  {
+   "t": 1794540556107,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794540491110,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1794539739543,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794539618117,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794339937878,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794339552328,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794339122629,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794338912951,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794338839022,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794275718712,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794275521906,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794275426692,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794275341408,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794275115837,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794263706413,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794263658596,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794263407619,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794263145616,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794262975374,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794262930526,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794262890977,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794242972115,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1794242936407,
+   "amount": 100,
+   "reason": "Lab complete"
+  },
+  {
+   "t": 1794242732882,
+   "amount": 15,
+   "reason": "Focus session"
+  },
+  {
+   "t": 1794242399507,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794242319552,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794242134513,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794242031047,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1794241633013,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793649678155,
+   "amount": 100,
+   "reason": "Lab complete"
+  },
+  {
+   "t": 1793649629618,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793649541498,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793649463464,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1793649396921,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793649345610,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793649290022,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793649224016,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793648214158,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1793646581127,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1793646576219,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793646509290,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793646478884,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793646455627,
+   "amount": 10,
+   "reason": "Correct answer"
+  },
+  {
+   "t": 1793645615421,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793645615408,
+   "amount": 50,
+   "reason": "Lesson complete"
+  },
+  {
+   "t": 1793373711124,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793373711124,
+   "amount": 100,
+   "reason": "Lab complete"
+  },
+  {
+   "t": 1793373388802,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793373264400,
+   "amount": 75,
+   "reason": "Badge earned"
+  },
+  {
+   "t": 1793373140540,
+   "amount": 25,
+   "reason": "Started the Gauntlet"
+  }
+ ],
+ "streak": {
+  "current": 2,
+  "best": 4,
+  "lastDay": "2026-11-20",
+  "freezesUsedWeek": "2026-11-09"
+ },
+ "activeDays": {
+  "2026-10-30": 350,
+  "2026-11-02": 605,
+  "2026-11-09": 420,
+  "2026-11-10": 95,
+  "2026-11-12": 334,
+  "2026-11-13": 115,
+  "2026-11-16": 375,
+  "2026-11-19": 635,
+  "2026-11-20": 16
+ },
+ "lessons": {
+  "m1-subnets-routing": {
+   "visitedAt": 1794540793007,
+   "piece": 18,
+   "completedAt": 1794540793007
+  },
+  "m2-dr-strategies": {
+   "visitedAt": 1793373573112
+  },
+  "m4-exam-strategy": {
+   "visitedAt": 1793373574636
+  },
+  "m1-cloud-fundamentals": {
+   "visitedAt": 1793645615407,
+   "completedAt": 1793645615407
+  },
+  "m1-shared-responsibility": {
+   "visitedAt": 1793646581127,
+   "completedAt": 1793646581127
+  },
+  "m1-well-architected": {
+   "visitedAt": 1793648214157,
+   "completedAt": 1793648214157
+  },
+  "m1-iam-identities": {
+   "visitedAt": 1795151163165,
+   "completedAt": 1793649463464
+  },
+  "m1-iam-policies": {
+   "visitedAt": 1794263445174,
+   "piece": 17,
+   "completedAt": 1794242972114
+  },
+  "m1-iam-guardrails": {
+   "visitedAt": 1794263706413,
+   "piece": 18,
+   "completedAt": 1794263706413
+  },
+  "m1-federation": {
+   "visitedAt": 1794275718712,
+   "piece": 16,
+   "completedAt": 1794275718712
+  },
+  "m1-vpc-cidr": {
+   "visitedAt": 1794339552328,
+   "piece": 12,
+   "completedAt": 1794339552328
+  },
+  "m1-sg-nacl": {
+   "visitedAt": 1795151042369,
+   "piece": 17,
+   "completedAt": 1794594068698
+  },
+  "m1-private-connectivity": {
+   "visitedAt": 1794867091823,
+   "piece": 22,
+   "completedAt": 1794867091823
+  },
+  "m1-encryption-kms": {
+   "visitedAt": 1794870036151,
+   "piece": 20,
+   "completedAt": 1794870036151
+  },
+  "m1-data-protection": {
+   "visitedAt": 1795095942641,
+   "piece": 16,
+   "completedAt": 1795095942641
+  },
+  "m1-threat-protection": {
+   "visitedAt": 1795146154930,
+   "piece": 16,
+   "completedAt": 1795146154930
+  },
+  "m1-ref-3tier": {
+   "visitedAt": 1795149090239,
+   "piece": 16,
+   "completedAt": 1795149090239
+  },
+  "m2-ha-scaling": {
+   "visitedAt": 1795149100011
+  },
+  "m5-networking": {
+   "visitedAt": 1795152513238
+  }
+ },
+ "questions": {
+  "cost-b-016": {
+   "seen": 2,
+   "correct": 0,
+   "lastAt": 1794865100849,
+   "lastCorrect": false,
+   "box": 0,
+   "flagged": true
+  },
+  "sec-a-063": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793646455626,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-060": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793646478884,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-064": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793646509290,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-061": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1793646531512,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-065": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793646576218,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-007": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795150743654,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-a-002": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793649290022,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-006": {
+   "seen": 2,
+   "correct": 1,
+   "lastAt": 1795150743653,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-001": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1793649396921,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-005": {
+   "seen": 2,
+   "correct": 0,
+   "lastAt": 1795150743651,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-012": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794241633013,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-008": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794242031047,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-011": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794242134513,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-009": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794242319552,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-010": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794242399507,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-016": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794262890977,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-017": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794262930526,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-019": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794262975374,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-018": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794263145616,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-020": {
+   "seen": 2,
+   "correct": 1,
+   "lastAt": 1795152325137,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-023": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794275115837,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-026": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1794275168600,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-024": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795152258683,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-a-025": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794275426692,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-027": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794275521906,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-009": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794338839022,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-001": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795151963495,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-b-002": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794339122629,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-006": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1794538917291,
+   "lastCorrect": false,
+   "box": 0,
+   "flagged": true
+  },
+  "sec-b-005": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1794539034365,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-003": {
+   "seen": 2,
+   "correct": 1,
+   "lastAt": 1795150743652,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-008": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794539618117,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-004": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794539739543,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-012": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794577200653,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-010": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794577554164,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-014": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795150743651,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-b-013": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794577847651,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-011": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794578006513,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-017": {
+   "seen": 2,
+   "correct": 1,
+   "lastAt": 1795152163277,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "cost-b-015": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794866266068,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "cost-b-011": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794866544628,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "cost-b-039": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794866954399,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-031": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794867669201,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-030": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794868215095,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-032": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1794869580947,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-034": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1794869644051,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-033": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1794869797927,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-038": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795095250893,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-040": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795095298295,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-041": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795095359042,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-039": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795095834463,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-042": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795150743654,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-b-034": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795145574259,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-031": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795145706024,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-032": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795145788541,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-033": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795145797264,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-035": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795146014205,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-045": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795147470993,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-046": {
+   "seen": 2,
+   "correct": 2,
+   "lastAt": 1795150743655,
+   "lastCorrect": true,
+   "box": 2
+  },
+  "sec-b-043": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795147937244,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-044": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795148359055,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-047": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795148439753,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-023": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743652,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-021": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743652,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-018": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743652,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-060": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743652,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-064": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743653,
+   "lastCorrect": false,
+   "box": 0,
+   "flagged": true
+  },
+  "sec-a-014": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743653,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-049": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743653,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-055": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743654,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-007": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743654,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-056": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743654,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-a-051": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743654,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-059": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795150743655,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-a-047": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795150743655,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-062": {
+   "seen": 1,
+   "correct": 1,
+   "lastAt": 1795152230719,
+   "lastCorrect": true,
+   "box": 1
+  },
+  "sec-b-036": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795152363315,
+   "lastCorrect": false,
+   "box": 0
+  },
+  "sec-b-030": {
+   "seen": 1,
+   "correct": 0,
+   "lastAt": 1795152476841,
+   "lastCorrect": false,
+   "box": 0
+  }
+ },
+ "cards": {
+  "fc-m1-shared-responsibility-2": {
+   "box": 1,
+   "due": 1794623655235,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-well-architected-1": {
+   "box": 1,
+   "due": 1794623661583,
+   "reps": 1,
+   "lapses": 1
+  },
+  "fc-m1-shared-responsibility-1": {
+   "box": 2,
+   "due": 1794796474848,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-federation-3": {
+   "box": 1,
+   "due": 1794623695698,
+   "reps": 1,
+   "lapses": 1
+  },
+  "fc-m1-sg-nacl-3": {
+   "box": 1,
+   "due": 1794623721629,
+   "reps": 1,
+   "lapses": 1
+  },
+  "fc-m1-well-architected-4": {
+   "box": 2,
+   "due": 1794796538286,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-identities-4": {
+   "box": 1,
+   "due": 1794623786219,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-cloud-fundamentals-6": {
+   "box": 2,
+   "due": 1794796606654,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-identities-6": {
+   "box": 2,
+   "due": 1794796629985,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-subnets-routing-5": {
+   "box": 2,
+   "due": 1794796635667,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-federation-2": {
+   "box": 2,
+   "due": 1794796645608,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-guardrails-4": {
+   "box": 2,
+   "due": 1794796670888,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-policies-6": {
+   "box": 3,
+   "due": 1795142719785,
+   "reps": 2,
+   "lapses": 1
+  },
+  "fc-m1-vpc-cidr-2": {
+   "box": 1,
+   "due": 1794623909400,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-policies-1": {
+   "box": 1,
+   "due": 1794623927303,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-vpc-cidr-5": {
+   "box": 1,
+   "due": 1794623950407,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-identities-3": {
+   "box": 2,
+   "due": 1794796772323,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-policies-4": {
+   "box": 1,
+   "due": 1794623998913,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-shared-responsibility-6": {
+   "box": 2,
+   "due": 1794796805353,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-subnets-routing-2": {
+   "box": 1,
+   "due": 1794624029953,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-subnets-routing-6": {
+   "box": 1,
+   "due": 1794624043596,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-vpc-cidr-1": {
+   "box": 1,
+   "due": 1794624054842,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-subnets-routing-1": {
+   "box": 2,
+   "due": 1794796867807,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-policies-3": {
+   "box": 1,
+   "due": 1794624082580,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-federation-5": {
+   "box": 1,
+   "due": 1794624092610,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-federation-4": {
+   "box": 1,
+   "due": 1794624113437,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-vpc-cidr-6": {
+   "box": 1,
+   "due": 1794624134646,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-vpc-cidr-4": {
+   "box": 1,
+   "due": 1794624145039,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-policies-5": {
+   "box": 1,
+   "due": 1794624189096,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-guardrails-6": {
+   "box": 2,
+   "due": 1794797003732,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-cloud-fundamentals-5": {
+   "box": 2,
+   "due": 1794797014179,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-iam-guardrails-5": {
+   "box": 1,
+   "due": 1794624229079,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-shared-responsibility-4": {
+   "box": 1,
+   "due": 1794624244475,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-well-architected-5": {
+   "box": 1,
+   "due": 1794624256655,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-vpc-cidr-3": {
+   "box": 2,
+   "due": 1794797089968,
+   "reps": 1,
+   "lapses": 0
+  },
+  "fc-m1-subnets-routing-4": {
+   "box": 2,
+   "due": 1794797111233,
+   "reps": 1,
+   "lapses": 0
+  }
+ },
+ "attempts": [
+  {
+   "id": "boss-1793373386890",
+   "kind": "boss",
+   "domain": "cost",
+   "startedAt": 1793373386890,
+   "durationSec": 2400,
+   "questionIds": [
+    "cost-b-004",
+    "cost-b-022",
+    "cost-a-001",
+    "cost-a-024",
+    "cost-a-039",
+    "cost-b-030",
+    "cost-b-011",
+    "cost-b-038",
+    "cost-b-018",
+    "cost-a-016",
+    "cost-b-001",
+    "cost-a-017",
+    "cost-b-042",
+    "cost-b-040",
+    "cost-a-041",
+    "cost-b-005",
+    "cost-b-033",
+    "cost-a-043",
+    "cost-b-015",
+    "cost-b-010"
+   ],
+   "answers": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "flags": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "correct": 0
+  },
+  {
+   "id": "boss-1793373386891",
+   "kind": "boss",
+   "domain": "cost",
+   "startedAt": 1793373386891,
+   "durationSec": 2400,
+   "questionIds": [
+    "cost-a-025",
+    "cost-b-036",
+    "cost-a-040",
+    "cost-b-013",
+    "cost-a-003",
+    "cost-b-015",
+    "cost-a-042",
+    "cost-a-001",
+    "cost-b-028",
+    "cost-a-017",
+    "cost-b-011",
+    "cost-b-008",
+    "cost-a-029",
+    "cost-a-021",
+    "cost-a-008",
+    "cost-a-033",
+    "cost-a-022",
+    "cost-b-014",
+    "cost-b-016",
+    "cost-b-033"
+   ],
+   "answers": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "flags": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "correct": 0
+  },
+  {
+   "id": "boss-1795149105806",
+   "kind": "boss",
+   "domain": "secure",
+   "startedAt": 1795149105806,
+   "durationSec": 2400,
+   "questionIds": [
+    "sec-a-005",
+    "sec-b-014",
+    "sec-b-023",
+    "sec-a-021",
+    "sec-b-018",
+    "sec-b-003",
+    "sec-b-060",
+    "sec-b-064",
+    "sec-a-014",
+    "sec-b-049",
+    "sec-a-006",
+    "sec-a-007",
+    "sec-b-055",
+    "sec-b-007",
+    "sec-a-042",
+    "sec-b-056",
+    "sec-a-051",
+    "sec-b-046",
+    "sec-a-059",
+    "sec-a-047"
+   ],
+   "answers": [
+    [
+     3,
+     2
+    ],
+    [
+     0
+    ],
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     3
+    ],
+    [
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     1
+    ],
+    [
+     1
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     0
+    ],
+    [
+     2
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4,
+     3
+    ]
+   ],
+   "flags": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "correct": 12,
+   "finishedAt": 1795150743655,
+   "perDomain": {
+    "secure": {
+     "correct": 12,
+     "total": 20
+    }
+   }
+  }
+ ],
+ "labs": {
+  "lab-budget": {
+   "startedAt": 1793373694027,
+   "completedAt": 1793373711123
+  },
+  "lab-root": {
+   "startedAt": 1793649465618,
+   "completedAt": 1793649678155
+  },
+  "lab-iam": {
+   "startedAt": 1793735395562,
+   "completedAt": 1794242936407
+  },
+  "lab-vpc": {
+   "startedAt": 1793735396265,
+   "completedAt": 1794540745732
+  },
+  "lab-sg": {
+   "startedAt": 1793735396581
+  },
+  "lab-kms": {
+   "startedAt": 1794869859694,
+   "completedAt": 1794870025136
+  }
+ },
+ "scenarios": {},
+ "badges": {
+  "versioned": 1793373264400,
+  "standby": 1793373388802,
+  "budget-hawk": 1793373711124,
+  "first-steps": 1793645615421,
+  "root-lock": 1793649541498,
+  "least-privilege": 1793649629618,
+  "vpc-architect": 1794540491110,
+  "lab-rat": 1794870025136,
+  "deep-work": 1795148117135,
+  "module-1": 1795149090246
+ },
+ "focusSessions": 11,
+ "cloud": {
+  "version": 1,
+  "accountId": "123456789012",
+  "region": "us-east-1",
+  "rootMfa": true,
+  "simHours": 47.36666666666654,
+  "accruedUsd": 2.903356164517985,
+  "vpcs": [
+   {
+    "id": "vpc-0default0000000",
+    "name": "default",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "cidr": "172.31.0.0/16",
+    "isDefault": true,
+    "dnsHostnames": true
+   },
+   {
+    "id": "vpc-287d9cfde8b6206a4",
+    "name": "prod",
+    "region": "us-east-1",
+    "createdAt": 1794540270366,
+    "cidr": "10.0.0.0/16",
+    "isDefault": false,
+    "dnsHostnames": false
+   }
+  ],
+  "subnets": [
+   {
+    "id": "subnet-0def0000000000a",
+    "name": "default-us-east-1a",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "cidr": "172.31.0.0/20",
+    "az": "us-east-1a",
+    "autoPublicIp": true
+   },
+   {
+    "id": "subnet-0def0000000000b",
+    "name": "default-us-east-1b",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "cidr": "172.31.16.0/20",
+    "az": "us-east-1b",
+    "autoPublicIp": true
+   },
+   {
+    "id": "subnet-0def0000000000c",
+    "name": "default-us-east-1c",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "cidr": "172.31.32.0/20",
+    "az": "us-east-1c",
+    "autoPublicIp": true
+   },
+   {
+    "id": "subnet-a6f5c6a3a7082f17e",
+    "name": "public-a",
+    "region": "us-east-1",
+    "createdAt": 1794540491103,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "cidr": "10.0.0.0/24",
+    "az": "us-east-1a",
+    "autoPublicIp": true
+   },
+   {
+    "id": "subnet-12cc298efae494d85",
+    "name": "public-b",
+    "region": "us-east-1",
+    "createdAt": 1794540491103,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "cidr": "10.0.1.0/24",
+    "az": "us-east-1b",
+    "autoPublicIp": true
+   },
+   {
+    "id": "subnet-45f4815cef8737134",
+    "name": "private-a",
+    "region": "us-east-1",
+    "createdAt": 1794540491103,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "cidr": "10.0.128.0/24",
+    "az": "us-east-1c",
+    "autoPublicIp": false
+   },
+   {
+    "id": "subnet-c92375a972f6c0a27",
+    "name": "private-b",
+    "region": "us-east-1",
+    "createdAt": 1794540491103,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "cidr": "10.0.12.0/24",
+    "az": "us-east-1a",
+    "autoPublicIp": false
+   }
+  ],
+  "igws": [
+   {
+    "id": "igw-0default0000000",
+    "name": "default",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000"
+   },
+   {
+    "id": "igw-b2d85684010bb1767",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1794540593035,
+    "vpcId": "vpc-287d9cfde8b6206a4"
+   }
+  ],
+  "natGateways": [
+   {
+    "id": "nat-53c56f21faa1a8151",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1794540694410,
+    "subnetId": "subnet-a6f5c6a3a7082f17e",
+    "state": "available",
+    "publicIp": "18.68.109.125",
+    "kind": "gateway"
+   },
+   {
+    "id": "nat-5cf2004b4a639b86d",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1794540706192,
+    "subnetId": "subnet-12cc298efae494d85",
+    "state": "available",
+    "publicIp": "52.8.81.13",
+    "kind": "gateway"
+   }
+  ],
+  "routeTables": [
+   {
+    "id": "rtb-0default0000000",
+    "name": "main",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "main": true,
+    "subnetIds": [],
+    "routes": [
+     {
+      "dest": "172.31.0.0/16",
+      "target": "local"
+     },
+     {
+      "dest": "0.0.0.0/0",
+      "target": "igw-0default0000000"
+     }
+    ]
+   },
+   {
+    "id": "rtb-bd021fedb853999ee",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1794540270366,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "main": true,
+    "routes": [
+     {
+      "dest": "10.0.0.0/16",
+      "target": "local"
+     }
+    ],
+    "subnetIds": []
+   },
+   {
+    "id": "rtb-48b18ca694463792d",
+    "name": "public-rtb",
+    "region": "us-east-1",
+    "createdAt": 1794540561316,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "main": false,
+    "routes": [
+     {
+      "dest": "10.0.0.0/16",
+      "target": "local"
+     },
+     {
+      "dest": "0.0.0.0/0",
+      "target": "igw-b2d85684010bb1767"
+     }
+    ],
+    "subnetIds": [
+     "subnet-a6f5c6a3a7082f17e",
+     "subnet-12cc298efae494d85"
+    ]
+   },
+   {
+    "id": "rtb-26984384c280b76ca",
+    "name": "private-rtb",
+    "region": "us-east-1",
+    "createdAt": 1794540728287,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "main": false,
+    "routes": [
+     {
+      "dest": "10.0.0.0/16",
+      "target": "local"
+     },
+     {
+      "dest": "0.0.0.0/0",
+      "target": "nat-53c56f21faa1a8151"
+     }
+    ],
+    "subnetIds": [
+     "subnet-45f4815cef8737134",
+     "subnet-c92375a972f6c0a27"
+    ]
+   }
+  ],
+  "securityGroups": [
+   {
+    "id": "sg-0default0000000",
+    "name": "default",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "description": "default VPC security group",
+    "inbound": [
+     {
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "source": "sg-0default0000000",
+      "description": "members of this SG"
+     }
+    ],
+    "outbound": [
+     {
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "source": "0.0.0.0/0"
+     }
+    ]
+   },
+   {
+    "id": "sg-0b59e584b7e362e04",
+    "name": "launch-wizard-1",
+    "description": "launch-wizard created",
+    "vpcId": "vpc-0default0000000",
+    "region": "us-east-1",
+    "createdAt": 1793373250514,
+    "inbound": [],
+    "outbound": [
+     {
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "source": "0.0.0.0/0"
+     }
+    ]
+   },
+   {
+    "id": "sg-8941bae09b45d7ee9",
+    "name": "default",
+    "region": "us-east-1",
+    "createdAt": 1794540270366,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "description": "default VPC security group",
+    "inbound": [
+     {
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "source": "sg-8941bae09b45d7ee9",
+      "description": "members of this SG"
+     }
+    ],
+    "outbound": [
+     {
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "source": "0.0.0.0/0"
+     }
+    ]
+   }
+  ],
+  "nacls": [
+   {
+    "id": "acl-0default0000000",
+    "name": "default",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "vpcId": "vpc-0default0000000",
+    "isDefault": true,
+    "subnetIds": [],
+    "inbound": [
+     {
+      "num": 100,
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "cidr": "0.0.0.0/0",
+      "action": "allow"
+     }
+    ],
+    "outbound": [
+     {
+      "num": 100,
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "cidr": "0.0.0.0/0",
+      "action": "allow"
+     }
+    ]
+   },
+   {
+    "id": "acl-211d6a87ab558b03c",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1794540270366,
+    "vpcId": "vpc-287d9cfde8b6206a4",
+    "isDefault": true,
+    "subnetIds": [],
+    "inbound": [
+     {
+      "num": 100,
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "cidr": "0.0.0.0/0",
+      "action": "allow"
+     }
+    ],
+    "outbound": [
+     {
+      "num": 100,
+      "protocol": "all",
+      "from": 0,
+      "to": 65535,
+      "cidr": "0.0.0.0/0",
+      "action": "allow"
+     }
+    ]
+   }
+  ],
+  "endpoints": [],
+  "peerings": [],
+  "instances": [
+   {
+    "id": "i-15843070c63beb782",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1793373250514,
+    "type": "t3.micro",
+    "ami": "ami-0c02fb55956c7d316",
+    "subnetId": "subnet-0def0000000000a",
+    "sgIds": [
+     "sg-0b59e584b7e362e04"
+    ],
+    "state": "running",
+    "privateIp": "172.31.0.4",
+    "publicIp": "18.119.60.72",
+    "volumeIds": [
+     "vol-32e9991feb592be14"
+    ],
+    "launchedAt": 1793373250514,
+    "purchase": "on-demand",
+    "imdsv2": true,
+    "cpu": 3.0050210452918256
+   }
+  ],
+  "volumes": [
+   {
+    "id": "vol-32e9991feb592be14",
+    "name": "",
+    "region": "us-east-1",
+    "createdAt": 1793373250514,
+    "sizeGb": 8,
+    "type": "gp3",
+    "iops": 3000,
+    "throughput": 125,
+    "az": "us-east-1a",
+    "attachedTo": "i-15843070c63beb782",
+    "encrypted": false,
+    "deleteOnTermination": true
+   }
+  ],
+  "snapshots": [],
+  "elasticIps": [
+   {
+    "id": "eipalloc-2f5c1298771739bd8",
+    "name": "nat-53c56f21faa1a8151-eip",
+    "region": "us-east-1",
+    "createdAt": 1794540694410,
+    "publicIp": "18.68.109.125",
+    "instanceId": "nat-53c56f21faa1a8151"
+   },
+   {
+    "id": "eipalloc-35df9b0ba5fbf2406",
+    "name": "nat-5cf2004b4a639b86d-eip",
+    "region": "us-east-1",
+    "createdAt": 1794540706192,
+    "publicIp": "52.8.81.13",
+    "instanceId": "nat-5cf2004b4a639b86d"
+   }
+  ],
+  "launchTemplates": [],
+  "targetGroups": [],
+  "loadBalancers": [],
+  "asgs": [],
+  "buckets": [],
+  "iamPolicies": [
+   {
+    "id": "pol-admin",
+    "name": "AdministratorAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access to all AWS services and resources.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"*\",\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-poweruser",
+    "name": "PowerUserAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access except IAM and Organizations management.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"NotAction\": [\n        \"iam:*\",\n        \"organizations:*\",\n        \"account:*\"\n      ],\n      \"Resource\": \"*\"\n    },\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:CreateServiceLinkedRole\",\n        \"iam:ListRoles\",\n        \"organizations:DescribeOrganization\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-readonly",
+    "name": "ReadOnlyAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Read-only access to AWS services and resources.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"*:Describe*\",\n        \"*:Get*\",\n        \"*:List*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-s3-read",
+    "name": "AmazonS3ReadOnlyAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Read-only access to all buckets.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:Get*\",\n        \"s3:List*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-s3-full",
+    "name": "AmazonS3FullAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access to all buckets.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:*\",\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-ec2-full",
+    "name": "AmazonEC2FullAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access to Amazon EC2.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ec2:*\",\n        \"elasticloadbalancing:*\",\n        \"autoscaling:*\",\n        \"cloudwatch:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-ddb-full",
+    "name": "AmazonDynamoDBFullAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access to DynamoDB.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"dynamodb:*\",\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-sqs-full",
+    "name": "AmazonSQSFullAccess",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Full access to SQS.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"sqs:*\",\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-lambda-basic",
+    "name": "AWSLambdaBasicExecutionRole",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Lets a Lambda function write logs to CloudWatch Logs.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-lambda-sqs",
+    "name": "AWSLambdaSQSQueueExecutionRole",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Lets Lambda poll SQS queues and write logs.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"sqs:ReceiveMessage\",\n        \"sqs:DeleteMessage\",\n        \"sqs:GetQueueAttributes\",\n        \"logs:CreateLogGroup\",\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-ssm-core",
+    "name": "AmazonSSMManagedInstanceCore",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Lets Systems Manager manage an EC2 instance (Session Manager, patching).",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"ssm:UpdateInstanceInformation\",\n        \"ssmmessages:*\",\n        \"ec2messages:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-cw-agent",
+    "name": "CloudWatchAgentServerPolicy",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Lets the CloudWatch agent publish metrics and logs.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"cloudwatch:PutMetricData\",\n        \"logs:PutLogEvents\",\n        \"logs:CreateLogStream\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-billing",
+    "name": "Billing",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Access to billing and cost management.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"aws-portal:*\",\n        \"ce:*\",\n        \"budgets:*\",\n        \"cur:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "pol-change-pw",
+    "name": "IAMUserChangePassword",
+    "region": "global",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "description": "Lets a user change their own password.",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"iam:ChangePassword\",\n      \"Resource\": \"arn:aws:iam::*:user/${aws:username}\"\n    }\n  ]\n}"
+   },
+   {
+    "id": "ANPA-9eb0963334dd1a8db",
+    "name": "AppBucketRead",
+    "region": "global",
+    "createdAt": 1794242844056,
+    "managedBy": "customer",
+    "description": "",
+    "document": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"Statement1\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:GetObject\"\n      ],\n      \"Resource\": [\n        \"arn:aws:s3:::my-bucket/*\",\n        \"arn:aws:s3:::my-app-bucket/*\"\n      ]\n    }\n  ]\n}"
+   }
+  ],
+  "iamUsers": [
+   {
+    "id": "AIDA-31a7d992776ed6fdd",
+    "name": "proxy",
+    "region": "global",
+    "createdAt": 1793649603430,
+    "groupIds": [
+     "AGPA-5c4d9b9bc5bf8fa70"
+    ],
+    "policyIds": [],
+    "mfa": true,
+    "consoleAccess": true,
+    "accessKeys": 0
+   }
+  ],
+  "iamGroups": [
+   {
+    "id": "AGPA-5c4d9b9bc5bf8fa70",
+    "name": "Admins",
+    "region": "global",
+    "createdAt": 1793649629605,
+    "policyIds": [
+     "pol-admin"
+    ]
+   }
+  ],
+  "iamRoles": [
+   {
+    "id": "AROA-7c38ecf5f35267666",
+    "name": "EC2-S3-ReadOnly",
+    "region": "global",
+    "createdAt": 1794242936399,
+    "trustedEntity": "ec2.amazonaws.com",
+    "policyIds": [
+     "ANPA-9eb0963334dd1a8db"
+    ],
+    "description": ""
+   }
+  ],
+  "kmsKeys": [
+   {
+    "id": "key-aws-s3",
+    "name": "aws/s3",
+    "alias": "aws/s3",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "rotation": true,
+    "enabled": true,
+    "multiRegion": false,
+    "keyUsers": []
+   },
+   {
+    "id": "key-aws-ebs",
+    "name": "aws/ebs",
+    "alias": "aws/ebs",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "rotation": true,
+    "enabled": true,
+    "multiRegion": false,
+    "keyUsers": []
+   },
+   {
+    "id": "key-aws-rds",
+    "name": "aws/rds",
+    "alias": "aws/rds",
+    "region": "us-east-1",
+    "createdAt": 1767225600000,
+    "managedBy": "aws",
+    "rotation": true,
+    "enabled": true,
+    "multiRegion": false,
+    "keyUsers": []
+   },
+   {
+    "id": "67462c11-390f-4204-9cc3-b410290666b5",
+    "name": "app-data",
+    "alias": "app-data",
+    "region": "us-east-1",
+    "createdAt": 1794869972265,
+    "managedBy": "customer",
+    "rotation": true,
+    "enabled": true,
+    "multiRegion": false,
+    "keyUsers": [
+     "AIDA-31a7d992776ed6fdd",
+     "AROA-7c38ecf5f35267666"
+    ],
+    "keyAdmins": [
+     "AIDA-31a7d992776ed6fdd"
+    ],
+    "keySpec": "SYMMETRIC_DEFAULT",
+    "description": ""
+   }
+  ],
+  "dbInstances": [],
+  "dynamoTables": [],
+  "lambdas": [],
+  "apis": [],
+  "queues": [],
+  "topics": [],
+  "hostedZones": [],
+  "healthChecks": [],
+  "distributions": [],
+  "alarms": [],
+  "logGroups": [],
+  "budgets": [
+   {
+    "id": "budget-beb3ede390f6a042e",
+    "name": "My Monthly Cost Budget",
+    "region": "global",
+    "createdAt": 1793373711116,
+    "amount": 10,
+    "alertPercent": 80,
+    "email": "learner@example.com",
+    "kind": "cost",
+    "period": "MONTHLY"
+   }
+  ],
+  "trails": [],
+  "events": [
+   {
+    "t": 1794870025130,
+    "service": "kms",
+    "msg": "PutKeyPolicy app-data (users: proxy, EC2-S3-ReadOnly)"
+   },
+   {
+    "t": 1794870017862,
+    "service": "kms",
+    "msg": "PutKeyPolicy app-data (users: proxy)"
+   },
+   {
+    "t": 1794869972266,
+    "service": "kms",
+    "msg": "CreateKey 67462c11-390f-4204-9cc3-b410290666b5 (SYMMETRIC_DEFAULT); CreateAlias alias/app-data; EnableKeyRotation"
+   },
+   {
+    "t": 1794540745727,
+    "service": "ec2",
+    "msg": "Associated 2 subnet(s) with rtb-26984384c280b76ca"
+   },
+   {
+    "t": 1794540741585,
+    "service": "ec2",
+    "msg": "Updated routes in rtb-26984384c280b76ca: 10.0.0.0/16→local, 0.0.0.0/0→nat-53c56f21faa1a8151"
+   },
+   {
+    "t": 1794540728287,
+    "service": "ec2",
+    "msg": "Created route table private-rtb"
+   },
+   {
+    "t": 1794540706192,
+    "service": "ec2",
+    "msg": "Created NAT gateway nat-5cf2004b4a639b86d in subnet-12cc298efae494d85 with Elastic IP 52.8.81.13"
+   },
+   {
+    "t": 1794540694410,
+    "service": "ec2",
+    "msg": "Created NAT gateway nat-53c56f21faa1a8151 in subnet-a6f5c6a3a7082f17e with Elastic IP 18.68.109.125"
+   },
+   {
+    "t": 1794540634197,
+    "service": "ec2",
+    "msg": "Associated 2 subnet(s) with rtb-48b18ca694463792d"
+   },
+   {
+    "t": 1794540624312,
+    "service": "ec2",
+    "msg": "Updated routes in rtb-48b18ca694463792d: 10.0.0.0/16→local, 0.0.0.0/0→igw-b2d85684010bb1767"
+   },
+   {
+    "t": 1794540598956,
+    "service": "ec2",
+    "msg": "Attached igw-b2d85684010bb1767 to vpc-287d9cfde8b6206a4"
+   },
+   {
+    "t": 1794540593035,
+    "service": "ec2",
+    "msg": "Created internet gateway igw-b2d85684010bb1767"
+   },
+   {
+    "t": 1794540561316,
+    "service": "ec2",
+    "msg": "Created route table public-rtb"
+   },
+   {
+    "t": 1794540491103,
+    "service": "ec2",
+    "msg": "Created subnet private-b 10.0.12.0/24 in us-east-1a"
+   },
+   {
+    "t": 1794540491103,
+    "service": "ec2",
+    "msg": "Created subnet private-a 10.0.128.0/24 in us-east-1c"
+   },
+   {
+    "t": 1794540491103,
+    "service": "ec2",
+    "msg": "Created subnet public-b 10.0.1.0/24 in us-east-1b"
+   },
+   {
+    "t": 1794540491103,
+    "service": "ec2",
+    "msg": "Created subnet public-a 10.0.0.0/24 in us-east-1a"
+   },
+   {
+    "t": 1794540270366,
+    "service": "ec2",
+    "msg": "Created VPC prod (10.0.0.0/16) with its main route table, default security group and default NACL"
+   },
+   {
+    "t": 1794242936400,
+    "service": "iam",
+    "msg": "CreateRole EC2-S3-ReadOnly trusted by ec2.amazonaws.com; AttachRolePolicy ×1"
+   },
+   {
+    "t": 1794242844057,
+    "service": "iam",
+    "msg": "CreatePolicy AppBucketRead"
+   },
+   {
+    "t": 1793649678150,
+    "service": "iam",
+    "msg": "EnableMFADevice proxy-phone (user proxy)"
+   },
+   {
+    "t": 1793649603431,
+    "service": "iam",
+    "msg": "CreateUser proxy (console access)"
+   },
+   {
+    "t": 1793373711116,
+    "service": "budgets",
+    "msg": "Created monthly cost budget My Monthly Cost Budget: $10.00, alert at 80% to learner@example.com"
+   },
+   {
+    "t": 1793373324838,
+    "service": "s3",
+    "msg": "DeleteBucket lab-ver-bucket-1"
+   },
+   {
+    "t": 1793373323625,
+    "service": "s3",
+    "msg": "Emptied bucket lab-ver-bucket-1"
+   },
+   {
+    "t": 1793373321299,
+    "service": "cloudfront",
+    "msg": "DeleteDistribution E2LIW3G1JQCG39"
+   },
+   {
+    "t": 1793373320077,
+    "service": "cloudfront",
+    "msg": "Disabled distribution E2LIW3G1JQCG39"
+   },
+   {
+    "t": 1793373309699,
+    "service": "cloudfront",
+    "msg": "Simulated 60 requests to dbkgxxxm1kxd8m.cloudfront.net: 45% cache hits"
+   },
+   {
+    "t": 1793373302094,
+    "service": "cloudfront",
+    "msg": "Simulated 60 requests to dbkgxxxm1kxd8m.cloudfront.net: 41% cache hits"
+   },
+   {
+    "t": 1793373301391,
+    "service": "s3",
+    "msg": "PutBucketPolicy lab-ver-bucket-1: allow CloudFront distribution E2LIW3G1JQCG39 (OAC)"
+   },
+   {
+    "t": 1793373301390,
+    "service": "cloudfront",
+    "msg": "CreateDistribution E2LIW3G1JQCG39 → lab-ver-bucket-1.s3.us-east-1.amazonaws.com (s3, OAC, redirect-to-https)"
+   },
+   {
+    "t": 1793373278117,
+    "service": "s3",
+    "msg": "Removed delete marker for sample.txt in lab-ver-bucket-1: object restored"
+   },
+   {
+    "t": 1793373271274,
+    "service": "s3",
+    "msg": "Delete marker created for sample.txt in lab-ver-bucket-1"
+   },
+   {
+    "t": 1793373270336,
+    "service": "s3",
+    "msg": "PutObject sample.txt to lab-ver-bucket-1 (STANDARD)"
+   },
+   {
+    "t": 1793373270027,
+    "service": "s3",
+    "msg": "PutObject sample.txt to lab-ver-bucket-1 (STANDARD)"
+   },
+   {
+    "t": 1793373264391,
+    "service": "s3",
+    "msg": "CreateBucket lab-ver-bucket-1 in us-east-1 (versioning Enabled, SSE-S3, BPA on)"
+   },
+   {
+    "t": 1793373250514,
+    "service": "ec2",
+    "msg": "Launched i-15843070c63beb782 (t3.micro) in us-east-1a"
+   },
+   {
+    "t": 1793372464315,
+    "service": "account",
+    "msg": "Account created. Root user has no MFA. Fix that first!"
+   }
+  ]
+ }
+}

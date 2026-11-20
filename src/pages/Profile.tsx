@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useStore } from '../store/store';
 import { BADGES, RANKS, rankOf } from '../lib/gamify';
-import { exportProgress, importProgress } from '../store/sync';
+import { exportProgress, importProgress, useBrowserOnly } from '../store/sync';
 import { PageTitle, Panel, Btn, Bar } from '../ui/bits';
 
 export default function Profile() {
@@ -9,9 +9,18 @@ export default function Profile() {
   const rank = rankOf(p.xp);
   const file = useRef<HTMLInputElement>(null);
   const [msg, setMsg] = useState('');
+  const browserOnly = useBrowserOnly();
   return (
     <div>
       <PageTitle title={p.profile.name} sub={`Level ${rank.level} ${rank.title} · ${p.xp.toLocaleString()} XP · ${Object.keys(p.badges).length}/${BADGES.length} badges`} />
+      <Panel title="Your details" className="mb-6">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-2 text-[15px]">
+          <span><span className="text-muted">Name</span> <b>{p.profile.name}</b></span>
+          <span><span className="text-muted">Exam date</span> <b>{new Date(`${p.profile.examDate}T00:00`).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</b></span>
+          <span><span className="text-muted">Study hours per week</span> <b>{p.profile.hoursPerWeek}</b></span>
+          <Btn kind="ghost" className="ml-auto" onClick={() => p.setProfile({ onboarded: false })}>Edit details</Btn>
+        </div>
+      </Panel>
       <Panel title="Rank ladder">
         <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {RANKS.map((r, i) => (
@@ -35,13 +44,14 @@ export default function Profile() {
         ); })}
       </div>
       <Panel title="Your data" className="mt-8">
-        <p className="text-[15px]">Progress saves to your browser and, while <code>npm run dev</code> is running, to <code>progress/progress.json</code> in the project. Commit and push that file to continue on another computer: on startup the newer copy wins.</p>
+        {browserOnly
+          ? <p className="text-[15px]">Progress saves in this browser only. Clearing site data erases it, so download a backup now and then. To continue in another browser or on another computer, download a backup here and restore it there.</p>
+          : <p className="text-[15px]">Progress saves to your browser and, while <code>npm run dev</code> is running, to <code>progress/progress.json</code> in the project. Commit and push that file to continue on another computer: on startup the newer copy wins.</p>}
         <div className="flex flex-wrap gap-2 mt-4">
           <Btn kind="ghost" onClick={exportProgress}>Download backup</Btn>
           <Btn kind="ghost" onClick={() => file.current?.click()}>Restore from backup</Btn>
           <input ref={file} type="file" accept="application/json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (!f) return; try { await importProgress(f); setMsg('Restored.'); } catch (err) { setMsg((err as Error).message); } }} />
           <Btn kind="ghost" onClick={() => { if (confirm('Reset the simulated AWS account to a fresh state? Your XP and lessons are kept.')) p.resetCloud(); }}>Reset mock AWS account</Btn>
-          <Btn kind="ghost" onClick={() => p.setProfile({ onboarded: false })}>Edit profile</Btn>
         </div>
         {msg && <p className="mt-2 text-sm">{msg}</p>}
       </Panel>

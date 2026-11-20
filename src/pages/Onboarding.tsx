@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useStore, today } from '../store/store';
 import { outline } from '../content';
+import { useBrowserOnly } from '../store/sync';
 
 export default function Onboarding() {
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);
   const award = useStore((s) => s.award);
+  // The first run awards XP, so any XP means this is someone coming back to edit their details.
+  const editing = useStore((s) => s.xp > 0);
+  const browserOnly = useBrowserOnly();
   const [name, setName] = useState(profile.name);
   const [examDate, setExamDate] = useState(profile.examDate);
   const [hours, setHours] = useState(profile.hoursPerWeek);
@@ -18,8 +22,8 @@ export default function Onboarding() {
         <p className="mt-4 text-lg text-muted max-w-[52ch]">A run from zero to AWS Certified Solutions Architect – Associate. You'll practise in a simulated AWS console, design architectures, and fight your way through {outline.length} lessons, four domain bosses and a final exam.</p>
         <form className="mt-8 rounded-2xl border border-line bg-surface p-6 space-y-5" onSubmit={(e) => {
           e.preventDefault();
-          setProfile({ name: name.trim() || 'Architect', examDate, hoursPerWeek: hours, startedAt: today(), onboarded: true });
-          award(25, 'Started the Gauntlet');
+          setProfile({ name: name.trim() || 'Architect', examDate, hoursPerWeek: hours, onboarded: true, ...(editing ? {} : { startedAt: today() }) });
+          if (!editing) award(25, 'Started the Gauntlet');
         }}>
           <label className="block">
             <span className="block font-medium mb-1">What should we call you?</span>
@@ -38,9 +42,13 @@ export default function Onboarding() {
             </label>
           </div>
           <div className="text-sm text-muted rounded-lg bg-sunk p-3">
-            Your progress saves automatically to <code>progress/progress.json</code> while <code>npm run dev</code> is running. Commit it with git to carry on from another computer.
+            {browserOnly
+              ? <>Your progress saves automatically in this browser. There is no account to create. To keep a copy or move to another browser, use <b>Profile → Download backup</b>.</>
+              : <>Your progress saves automatically to <code>progress/progress.json</code> while <code>npm run dev</code> is running. Commit it with git to carry on from another computer.</>}
+            {' '}You can change these details later from your profile.
           </div>
-          <button className="w-full py-3 rounded-xl bg-xp text-[#1b1200] font-display font-bold text-lg hover:brightness-95">Enter the Gauntlet</button>
+          <button className="w-full py-3 rounded-xl bg-xp text-[#1b1200] font-display font-bold text-lg hover:brightness-95">{editing ? 'Save changes' : 'Enter the Gauntlet'}</button>
+          {editing && <button type="button" className="w-full py-2 text-sm text-muted underline" onClick={() => setProfile({ onboarded: true })}>Cancel</button>}
         </form>
       </div>
     </div>

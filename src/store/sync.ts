@@ -1,5 +1,6 @@
 // Keeps localStorage and progress/progress.json in step. The newer `updatedAt` wins on load.
 // On a static host (no dev server) the API 404s and we silently stay on localStorage.
+import { useSyncExternalStore } from 'react';
 import { useStore, progressSnapshot, type Progress } from './store';
 
 export type SyncStatus = 'file' | 'local-only' | 'saving' | 'error';
@@ -8,6 +9,8 @@ const listeners = new Set<(s: SyncStatus) => void>();
 const setStatus = (s: SyncStatus) => { status = s; listeners.forEach((l) => l(s)); };
 export const getSyncStatus = () => status;
 export const onSyncStatus = (fn: (s: SyncStatus) => void) => { listeners.add(fn); return () => listeners.delete(fn); };
+/** True on the hosted site (or any static host): there is no dev server, so progress lives in this browser only. */
+export const useBrowserOnly = () => useSyncExternalStore((fn) => { const off = onSyncStatus(fn); return () => { off(); }; }, () => status === 'local-only');
 
 let fileAvailable = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
