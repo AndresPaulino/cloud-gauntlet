@@ -1118,7 +1118,7 @@ export default [
   {
     id: "res-a-051",
     domain: "resilient",
-    lessonIds: ["m5-task-concepts", "m3b-containers"],
+    lessonIds: ["m5-compute-extra", "m5-task-concepts"],
     difficulty: 2,
     stem: "A company has dozens of legacy Java applications running on on-premises virtual machines. It wants to move them into containers on AWS with the LEAST manual effort and without managing servers for the container hosts. Which approach should the solutions architect recommend?",
     options: [

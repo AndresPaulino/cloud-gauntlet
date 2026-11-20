@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useStore, type Attempt, type AttemptKind } from '../store/store';
-import { buildExam, buildBoss } from '../lib/adaptive';
-import { DOMAINS, questions } from '../content';
+import { buildExam, buildBoss, BOSS_MODULES } from '../lib/adaptive';
+import { DOMAINS, questions, modules } from '../content';
 import type { DomainId } from '../content/types';
 import { PageTitle, Panel, Btn } from '../ui/bits';
 
@@ -66,7 +66,8 @@ export default function ExamLobby() {
             <div className="text-3xl">{best >= 72 ? '🏆' : '⚔️'}</div>
             <div className="font-display font-bold text-lg mt-1">{d.territory}</div>
             <div className="text-sm text-muted">{d.name}</div>
-            <div className="text-sm mt-2">20 hard questions · 40 min · beat 72%</div>
+            <div className="text-sm mt-2">Covers {BOSS_MODULES[d.id].map((m) => modules.find((x) => x.id === m)!.title).join()}</div>
+            <div className="text-sm">20 hard questions · 40 min · beat 72%</div>
             <div className="text-sm text-muted">Best: {best ? `${best}%` : '—'}</div>
             <button className="mt-3 w-full py-2 rounded-xl text-white font-semibold" style={{ background: d.color }} onClick={() => go('boss', d.id)}>{best >= 72 ? 'Rematch' : 'Fight'}</button>
           </div>

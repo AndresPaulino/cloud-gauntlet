@@ -1,6 +1,6 @@
 // Question selection. Weak domains, unseen and recently-missed questions surface more often.
 import type { Progress } from '../store/store';
-import type { DomainId, Question } from '../content/types';
+import type { DomainId, ModuleId, Question } from '../content/types';
 import { questions, outline } from '../content';
 import { DOMAIN_WEIGHTS } from './scoring';
 import { domainAccuracy } from './gamify';
@@ -67,8 +67,17 @@ export function buildExam(p: Progress, count = 65, preferUnseen = true): Questio
   return shuffle(out).slice(0, count);
 }
 
+/** Each boss closes a module on the path map. Attempts stay keyed by domain (XP, company, trophies); the questions come only from that module's lessons. */
+export const BOSS_MODULES: Record<DomainId, ModuleId[]> = { secure: ['m1'], resilient: ['m2'], performance: ['m3a', 'm3b'], cost: ['m4'] };
+
+export const bossPool = (domain: DomainId) => {
+  const mods = BOSS_MODULES[domain];
+  const inModule = (id: string) => mods.includes(outline.find((o) => o.id === id)?.module as ModuleId);
+  return questions.filter((q) => q.lessonIds.every(inModule));
+};
+
 export function buildBoss(p: Progress, domain: DomainId, count = 20): Question[] {
-  return sample(questions.filter((q) => q.domain === domain), (q) => q.difficulty * (p.questions[q.id]?.lastCorrect ? 0.7 : 1.3), count);
+  return sample(bossPool(domain), (q) => q.difficulty * (p.questions[q.id]?.lastCorrect ? 0.7 : 1.3), count);
 }
 
 export function lessonQuiz(lessonId: string, count = 5): Question[] {

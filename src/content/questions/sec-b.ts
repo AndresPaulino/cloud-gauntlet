@@ -1288,7 +1288,7 @@ export default [
   {
     id: "sec-b-060",
     domain: "secure",
-    lessonIds: ["m1-threat-protection"],
+    lessonIds: ["m1-federation", "m3a-s3-security"],
     difficulty: 3,
     stem: "A mobile app lets users upload photos of up to 50 MB directly to an Amazon S3 bucket so that uploads do not pass through the company's servers. No long-term AWS credentials may be embedded in the app, and users must not be able to write to each other's prefixes. Which TWO approaches meet these requirements? (Choose TWO.)",
     options: [

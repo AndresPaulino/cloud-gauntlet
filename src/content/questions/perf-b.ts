@@ -1099,7 +1099,7 @@ export default [
   {
     id: "perf-b-049",
     domain: "performance",
-    lessonIds: ["m5-integration-analytics", "m3b-ref-serverless"],
+    lessonIds: ["m5-integration-analytics"],
     difficulty: 2,
     stem: "A mobile app's home screen needs data from a DynamoDB table, an Aurora database and an HTTP microservice. The developers want a single request to fetch exactly the fields the screen needs, plus real-time updates pushed to clients when data changes, using a managed service. Which solution meets these requirements?",
     options: [
@@ -1121,7 +1121,7 @@ export default [
   {
     id: "perf-b-050",
     domain: "performance",
-    lessonIds: ["m5-compute-extra"],
+    lessonIds: ["m5-compute-extra", "m3b-containers"],
     difficulty: 1,
     stem: "A small team has a containerized web application in Amazon ECR. It wants AWS to handle deployment, load balancing, HTTPS and automatic scaling, without configuring clusters, task definitions, load balancers or VPC networking. Which service fits BEST?",
     options: [
@@ -1167,7 +1167,7 @@ export default [
   {
     id: "perf-b-052",
     domain: "performance",
-    lessonIds: ["m5-compute-extra"],
+    lessonIds: ["m5-compute-extra", "m3b-containers"],
     difficulty: 2,
     stem: "Developers have a Java web application that needs a load balancer, an Auto Scaling group and rolling deployments. They want to upload code and have the environment provisioned and managed for them, but must still be able to SSH into instances and tune the underlying EC2 and load balancer settings. Which service should they use?",
     options: [

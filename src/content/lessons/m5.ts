@@ -58,6 +58,12 @@ export default [
         beyond: true,
       },
       {
+        heading: 'AWS Transfer Family: managed SFTP endpoints and IP allow-listing',
+        body:
+          "Partners and legacy systems often only speak **SFTP** (file transfer over SSH), **FTPS** (FTP over TLS), **FTP** or **AS2** (a B2B file exchange protocol). **AWS Transfer Family** gives them a fully managed server for those protocols that stores files directly in **Amazon S3** or **Amazon EFS**. There is no server to patch or scale, and it is highly available across AZs. Users authenticate with **SSH keys or passwords managed by the service**, with **AWS Directory Service / Active Directory**, or with a **custom identity provider** (a Lambda function or API Gateway). Each user maps to an IAM role that limits which bucket or folder they can reach.\n\nThe exam detail is the **endpoint type**, because it decides how you restrict who can connect:\n\n- **Public endpoint**: AWS hosts it on public IPs that AWS manages and that can change. You **cannot attach a security group**, so you cannot allow-list client IP ranges at the network level.\n- **VPC-hosted endpoint, internet-facing**: the endpoint lives in your VPC subnets and you attach **Elastic IP addresses** to it. Because it is in your VPC, you attach a **security group** whose inbound rules allow port 22 only from the partners' CIDR ranges. Bonus: the Elastic IPs are **static**, so partners whose firewalls only allow known destinations can allow-list your addresses too.\n- **VPC-hosted endpoint, internal**: reachable only from inside the VPC or over VPN / Direct Connect. Plain FTP is only allowed on this type, because FTP is unencrypted.\n\nDecision rule: if the question says **'only these source IPs may connect'** or **'partners need a fixed IP to allow-list'**, pick the **VPC-hosted, internet-facing endpoint with Elastic IPs and a security group**.\n\nWhy the usual alternatives lose:\n\n- **SFTP on EC2** works but is a server you patch, scale and make highly available, which fails 'fully managed'.\n- **AWS DataSync** is an agent-based service that copies data between your own storage systems and AWS. It does not give outsiders an SFTP login.\n- **A public writable S3 bucket** is insecure and is not SFTP. For HTTPS uploads without AWS credentials, the secure pattern is **presigned URLs**.",
+        beyond: true,
+      },
+      {
         heading: 'Exam angle',
         body:
           "- '300 remote employees reach private EC2 resources from home, authenticate with the corporate IdP' → **Client VPN** endpoint with SAML federation, associated with subnets in the VPC. Site-to-Site needs a customer gateway device; a bastion with SSH keys has no IdP integration and exposes port 22.\n- 'Connect the data centre' → Site-to-Site VPN (or Direct Connect).\n- 'All accounts launch workloads into centrally managed subnets in a networking account' → **RAM VPC sharing**. Peering creates separate VPCs; Transit Gateway connects VPCs but does not let accounts launch into your subnets.\n- 'Share the Transit Gateway with all accounts in the Organization' → RAM.\n- 'Only send VPC-bound traffic through the VPN' → Client VPN split-tunnel.",
@@ -127,6 +133,7 @@ export default [
       'RAM shares subnets, Transit Gateways, Route 53 Resolver rules, License Manager configurations, Capacity Reservations and Outposts.',
       'In VPC sharing, the owner controls subnets, route tables and NACLs; participants manage their own resources and security groups.',
       'RAM shares within an Organization need no invitation when sharing with Organizations is enabled.',
+      'Transfer Family: managed SFTP, FTPS, FTP and AS2 into S3 or EFS. Only a VPC-hosted endpoint takes a security group; internet-facing VPC endpoints use static Elastic IPs.',
     ],
     examTips: [
       '"Remote employees on laptops need private VPC access, authenticated by the corporate IdP" → AWS Client VPN with SAML federation.',
@@ -135,8 +142,11 @@ export default [
       '"Share one Transit Gateway with every account in the Organization" → RAM.',
       '"Resolve on-prem DNS names from all VPCs in all accounts" → Route 53 Resolver outbound endpoint + forwarding rules shared via RAM.',
       'A bastion host with SSH keys is the distractor for remote-access questions that mention an identity provider.',
+      '"Partners upload by SFTP into S3, only their IP ranges may connect, no servers" → Transfer Family with a VPC-hosted, internet-facing endpoint (Elastic IPs) and a security group allow-listing the partner CIDRs.',
     ],
     pitfalls: [
+      'Expecting to restrict a public Transfer Family endpoint with a security group; only VPC-hosted endpoints support security groups.',
+      'Choosing DataSync for external partners; it copies between storage systems you control and offers no SFTP login.',
       'Choosing Site-to-Site VPN for individual remote workers: it needs a customer gateway device and has no per-user authentication.',
       'Thinking RAM copies or moves a resource; it only grants use, and the owner keeps control.',
       'Expecting VPC peering or Transit Gateway to let other accounts launch into your subnets.',
@@ -163,7 +173,7 @@ export default [
         useWhen: 'Many accounts should run in centrally governed subnets.',
       },
     ],
-    services: ['client-vpn', 'site-to-site-vpn', 'ram', 'vpc', 'subnet', 'transit-gateway', 'route53', 'iam-identity-center', 'directory-service', 'organizations', 'vpc-lattice'],
+    services: ['client-vpn', 'site-to-site-vpn', 'ram', 'vpc', 'subnet', 'transit-gateway', 'route53', 'iam-identity-center', 'directory-service', 'organizations', 'vpc-lattice', 'transfer-family'],
   },
 
   // ---------------------------------------------------------------------------
@@ -209,6 +219,12 @@ export default [
         heading: 'AWS CloudFormation: infrastructure as code',
         body:
           "A **template** (YAML or JSON) declares resources; CloudFormation creates them as a **stack**, working out the dependency order itself. Template sections: `Parameters` (inputs such as instance type), `Mappings` (lookup tables such as AMI per Region), `Conditions`, **`Resources`** (the only required section), and `Outputs` (values to display or **Export** for other stacks via `Fn::ImportValue`).\n\nHow it behaves:\n\n- **Rollback**: if any resource fails to create, the whole stack rolls back by default, so you never get a half-built environment.\n- **Change sets** preview exactly what an update will add, modify or **replace** before you execute it.\n- **Drift detection** compares live resources with the template and reports manual changes (someone edited a security group in the console).\n- **DeletionPolicy**: `Retain` keeps a resource (for example an S3 bucket) when the stack is deleted; `Snapshot` takes a final snapshot of RDS/EBS; default is `Delete`. `UpdateReplacePolicy` does the same for replacements.\n- **StackSets** deploy one template to many accounts and Regions, and with service-managed permissions automatically to new accounts in an OU.\n- **Nested stacks** reuse common components; **stack policies** prevent updates to critical resources; **custom resources** (backed by Lambda) handle anything not natively supported; **cfn-init** and **creation policies / wait conditions** configure instances and wait for them to signal success.\n\nCloudFormation itself is free; you pay for the resources. Exam: 'reproducible', 'consistent across environments', 'infrastructure as code' → CloudFormation; 'many accounts or Regions' → StackSets.",
+      },
+      {
+        heading: 'CloudFormation in practice: environments, safe updates and StackSets',
+        body:
+          "**One template, many environments.** The standard pattern for dev, test and prod is a single template whose differences are **Parameters** (for example `InstanceType`, `MinSize`, `EnvironmentName`), deployed as a **separate stack per environment**. Every stack builds the same VPC, load balancer and Auto Scaling group from the same code, so the environments cannot drift apart through clicks, and a fix to the template reaches all of them the same way. Look-alike answers that fail:\n\n- **Runbooks of console steps** still depend on humans clicking, which is how drift started.\n- **Copying AMIs** captures what is installed on one instance, not the VPC, subnets, load balancer or scaling settings around it.\n- **AWS Config** records and evaluates configuration; it never creates anything.\n\n**Change set vs drift detection.** Both compare things, so the exam uses one as a distractor for the other:\n\n- A **change set** compares your **new template** with the **current stack** and lists, **before anything runs**, every resource that will be added, modified or **replaced** (replacement matters: replacing an RDS instance creates a new, empty database). You review it, then execute or discard it.\n- **Drift detection** compares the **live resources** with the **template the stack was last deployed with**, and reports changes someone made **outside** CloudFormation. It looks backwards and previews nothing.\n\n**Protecting data from stack deletion.** By default, deleting a stack deletes its resources. Set `DeletionPolicy: Snapshot` on an RDS instance (or EBS volume) to take a final snapshot first, or `DeletionPolicy: Retain` to leave the resource in place, now outside the stack. Termination protection on the stack and stack policies (which block updates to named resources) are extra safety nets.\n\n**StackSets permission models.** A StackSet is created in an administrator account and deploys **stack instances** into target accounts and Regions.\n\n- **Self-managed permissions**: you create IAM roles yourself (an administration role in the admin account and an execution role in every target account). Each new account needs those roles before it can be targeted.\n- **Service-managed permissions**: StackSets uses **AWS Organizations** trusted access, so you target **OUs** instead of account IDs and no per-account roles are needed. With **automatic deployment** enabled, any account that joins a targeted OU gets the stack automatically (and can have it removed when it leaves).\n\nSo 'new accounts added to an OU must receive the baseline automatically with the least effort' → **StackSets with service-managed permissions, targeting the OU, automatic deployment on**. A custom script looping over accounts works but is code you maintain and re-run; sharing a template file in S3 deploys nothing.",
+        beyond: true,
       },
       {
         heading: 'AWS CloudTrail: who did what',
@@ -307,10 +323,15 @@ export default [
       'Session Manager needs the SSM Agent, an instance role with AmazonSSMManagedInstanceCore, and network reach to SSM (NAT or interface endpoints); no port 22.',
       'Parameter Store Standard: free, up to 10,000 parameters of 4 KB; no automatic rotation.',
       'Control Tower controls: preventive = SCPs, detective = Config rules, proactive = CloudFormation hooks.',
+      'Change set = preview of an update before it runs; drift detection = report of manual changes after the fact.',
+      'DeletionPolicy Snapshot takes a final RDS/EBS snapshot on stack deletion; Retain keeps the resource; the default is Delete.',
+      'StackSets service-managed permissions target Organizations OUs; automatic deployment adds the stack to accounts that join the OU.',
     ],
     examTips: [
       '"Who deleted / changed this resource?" → CloudTrail; "what did the resource look like last Tuesday and is it compliant?" → AWS Config.',
       '"Deploy the same infrastructure to many accounts and Regions" → CloudFormation StackSets.',
+      '"Identical dev, test and prod, only sizes differ" → one parameterized CloudFormation template, one stack per environment.',
+      '"See which resources an update will modify or replace before it runs" → change set; "keep the database if the stack is deleted" → DeletionPolicy Snapshot or Retain.',
       '"Automatically fix non-compliant resources" → Config rule with automatic remediation via SSM Automation.',
       '"Monitor EC2 memory utilisation" → install the CloudWatch agent (it is not a default metric).',
       '"Alert when an error string appears in application logs" → CloudWatch Logs metric filter + alarm + SNS.',
@@ -325,6 +346,7 @@ export default [
       'Forgetting that CloudTrail data events must be explicitly enabled to audit S3 object reads.',
       'Using Parameter Store when the requirement is automatic secret rotation (Secrets Manager).',
       'Leaving CloudWatch Logs at "never expire" and paying for years of unneeded logs.',
+      'Picking drift detection to preview an update; it only reports manual changes that already happened.',
     ],
     prosCons: [
       {
@@ -406,6 +428,22 @@ export default [
         beyond: true,
       },
       {
+        heading: 'App Runner, Elastic Beanstalk and AWS Batch: the no-cluster options',
+        body:
+          "Three services let a team run code without assembling clusters, task definitions and load balancers. They differ in **how much control you keep** and in **what kind of work** they run (a web service that answers requests forever, or jobs that run to completion).\n\n**AWS App Runner** takes a **container image** (from ECR) or a **source code repository** and gives back a running web service with an **HTTPS URL**, a **managed TLS certificate**, built-in **load balancing** and **automatic scaling based on concurrent requests**. You never see a cluster, instance, task definition, load balancer or VPC setup (it can optionally reach private resources in a VPC through a VPC connector). The trade-off is control: there are **no instances to SSH into**, and only a small set of settings (CPU, memory, concurrency, scaling limits). Trigger: 'container image to a scalable HTTPS web app with nothing to configure'.\n\n**AWS Elastic Beanstalk** is a **PaaS (platform as a service)**: you upload application code (Java, .NET, Node.js, Python, PHP, Ruby, Go or Docker) and it creates an **environment** made of normal resources **in your own account**: EC2 instances, an Auto Scaling group, a load balancer, security groups and optionally an RDS database. It handles capacity provisioning, health monitoring and **deployments**, with policies including all at once, **rolling**, rolling with an additional batch, **immutable** (a fresh set of instances) and traffic splitting (a canary). Because the resources are ordinary EC2 and ELB resources, you **can SSH into instances and tune the load balancer, scaling and instance settings**. Beanstalk itself is free; you pay for the resources. Trigger: 'upload code, have the environment provisioned and deployed for us, but keep full access to the underlying resources'.\n\n**AWS Batch** runs **jobs that start, do their work and exit**. You define a **compute environment** (managed EC2, **Spot** or Fargate capacity with a maximum vCPU limit), a **job queue** and **job definitions** (container image, vCPU, memory, **retry attempts**, timeout). Batch schedules jobs, provisions just enough capacity, and scales back to zero when the queue is empty. **Array jobs** submit thousands of copies of one job with different inputs in a single call. Because jobs have a retry strategy, interruptible capacity is safe: a managed **Spot compute environment** cuts compute cost by **up to 90%** versus On-Demand, and an interrupted job is simply retried.\n\nWhy the common distractors lose:\n\n- **Lambda** has a hard **15-minute** maximum run time and at most 10 GB of memory, so it cannot run jobs measured in hours.\n- An **ECS service** keeps a desired number of tasks running forever and replaces any that stop. That suits long-running servers; run-to-completion jobs belong in Batch (or standalone ECS tasks).\n- A **self-managed scheduler** on EC2 is exactly the operational overhead these services remove.\n- **EKS** and **ECS on EC2** require clusters, task definitions or manifests, node groups and load balancers, which fails 'nothing to configure'.\n- **Lightsail** sells fixed-price virtual servers for simple projects; it does not give you managed rolling deployments on an Auto Scaling group (and it is out of scope for SAA-C03).\n- **Batch does not serve web traffic**, and **App Runner does not run batch jobs** or give you instance access.",
+        table: {
+          headers: ['', 'App Runner', 'Elastic Beanstalk', 'AWS Batch'],
+          rows: [
+            ['Runs', 'Always-on web services and APIs', 'Web apps and workers on EC2', 'Run-to-completion jobs'],
+            ['You provide', 'Container image or source repo', 'Application code or Docker image', 'Container image + job definition'],
+            ['Infrastructure visible?', 'No: fully hidden', 'Yes: EC2, ASG, ELB in your account; SSH allowed', 'Compute environment you configure; Batch scales it'],
+            ['Scaling', 'Automatic on concurrent requests', 'Auto Scaling group policies', 'Scales capacity to the job queue, down to zero'],
+            ['Pick when', '"Simplest path from image to HTTPS app"', '"Managed deployments but keep control of resources"', '"Thousands of hours-long jobs, lowest cost, no scheduler"'],
+          ],
+        },
+        beyond: true,
+      },
+      {
         heading: 'Exam angle',
         body:
           "- 'Same ECS tooling for containers in our data centre' → **ECS Anywhere**.\n- 'Run Kubernetes on-prem with AWS support' → **EKS Anywhere**; 'same Kubernetes build as EKS, self-supported' → **EKS Distro**.\n- 'Migrate thousands of VMware VMs quickly without changing tooling or converting them' → **VMware Cloud on AWS**.\n- 'Modernise a legacy Java/.NET app into containers with minimal manual effort' → **App2Container** → ECR → ECS/EKS.\n- 'Share serverless app templates across teams' → **Serverless Application Repository**.\n- 'Containers must scale horizontally' → externalise state first (S3, EFS, ElastiCache, RDS).",
@@ -475,6 +513,10 @@ export default [
       'App2Container containerises Java and .NET apps and generates ECS or Kubernetes deployment artifacts.',
       'Containerising requires externalising config (Parameter Store, Secrets Manager) and state (S3, EFS, RDS, DynamoDB).',
       'Fargate = least operational overhead; ECS/EKS on EC2 = control, GPUs, cost tuning.',
+      'App Runner: image or source repo in, HTTPS URL out, with load balancing and request-based auto scaling; no instances to access.',
+      'Elastic Beanstalk creates EC2, an Auto Scaling group and a load balancer in your account and manages deployments; you can still SSH in and tune them.',
+      'AWS Batch: compute environment + job queue + job definition; array jobs; scales to zero; Spot compute environments save up to 90% for retryable jobs.',
+      'Lambda maximum run time is 15 minutes, so hours-long jobs go to Batch, ECS tasks or EC2.',
     ],
     examTips: [
       '"Same ECS tooling for containers running in the data centre" → ECS Anywhere.',
@@ -483,12 +525,17 @@ export default [
       '"Containerise legacy Java/.NET apps with minimal manual effort" → App2Container, then ECR and ECS/EKS.',
       '"Reuse serverless application templates across teams" → Serverless Application Repository.',
       '"AWS-managed hardware in our facility" → Outposts, not ECS/EKS Anywhere (which use your hardware).',
+      '"Container image to a scalable HTTPS web app without clusters, task definitions or load balancers" → App Runner.',
+      '"Upload code, environment provisioned and deployed for us, but we must SSH in and tune EC2 and the load balancer" → Elastic Beanstalk.',
+      '"Thousands of containerized jobs, hours long, retryable, lowest cost, no scheduler" → AWS Batch with a Spot compute environment.',
     ],
     pitfalls: [
       'Confusing ECS/EKS Anywhere (your hardware) with Outposts (AWS hardware in your building).',
       'Choosing EKS Distro when the question asks for AWS support; Distro is self-supported.',
       'Containerising an app without moving its local state, so scaled-out containers lose data.',
       'Baking passwords or environment-specific config into the image instead of Secrets Manager/Parameter Store.',
+      'Choosing App Runner when the team needs instance access; it hides the infrastructure entirely (Beanstalk keeps it visible).',
+      'Running hours-long jobs on Lambda (15-minute limit) or as always-on ECS services (they never complete, so you pay while idle).',
     ],
     prosCons: [
       {
@@ -510,7 +557,7 @@ export default [
         useWhen: 'Modernising legacy Java/.NET servers into ECS or EKS.',
       },
     ],
-    services: ['ecs', 'eks', 'fargate', 'ecr', 'outposts', 'lambda', 'efs', 'rds', 'secrets-manager', 'parameter-store', 'alb', 'app-runner'],
+    services: ['ecs', 'eks', 'fargate', 'ecr', 'outposts', 'lambda', 'efs', 'rds', 'secrets-manager', 'parameter-store', 'alb', 'app-runner', 'elastic-beanstalk', 'batch', 'ec2-spot'],
   },
 
   // ---------------------------------------------------------------------------
@@ -552,6 +599,12 @@ export default [
         heading: 'How AppFlow and Kinesis Video Streams work',
         body:
           "**AppFlow**: create a **connection** to the source (OAuth to Salesforce, for example, credentials stored in Secrets Manager), then a **flow**: source object (Opportunities), destination (an S3 bucket, as Parquet or CSV), trigger (**scheduled** nightly, **event-driven** on record changes, or **on demand**), field mappings, filters (only `Stage = Closed Won`), and validations. Data is encrypted in transit and at rest with KMS; for supported sources AppFlow can use **PrivateLink** so data never crosses the public internet. You pay per flow run and per GB processed. Landed data is then catalogued with Glue and queried with Athena.\n\n**Kinesis Video Streams (KVS)**: producers (cameras with the KVS Producer SDK) send media fragments to a **stream**; KVS stores them durably with a retention you choose (from none up to years). Consumers read in real time or replay: **Rekognition Video** detects faces or objects, custom models run in SageMaker AI, and browsers play back via **HLS/DASH**. **WebRTC** signalling supports two-way, low-latency audio/video (doorbells, telemedicine).",
+      },
+      {
+        heading: 'AWS AppSync: one GraphQL API over many data sources',
+        body:
+          "Mobile and web front ends often need one screen's worth of data from several back ends. With a REST API that usually means **several round trips** (one endpoint per resource) and **over-fetching** (each endpoint returns whole objects even when the screen needs three fields). On a slow mobile network both hurt.\n\n**GraphQL** is a query language for APIs that fixes this: the client sends **one request describing exactly the fields it wants**, possibly spanning several types (user, orders, recommendations), and gets back exactly that shape. A **schema** defines the types and operations: **queries** (read), **mutations** (write) and **subscriptions** (be told when data changes).\n\n**AWS AppSync** is managed, serverless GraphQL (it also offers a separate Events API for pure WebSocket pub/sub):\n\n- **Resolvers** connect each field in the schema to a **data source**: **DynamoDB**, **Aurora** (through the RDS Data API), **OpenSearch**, **Lambda** (for anything custom) and any **HTTP endpoint** (a microservice or third-party API). One query can be answered by several data sources at once, and AppSync stitches the results together.\n- **Subscriptions** push changes to connected clients in **real time over WebSockets**: when a mutation changes data, every subscribed client gets the update without polling. This is what powers live chat, scoreboards and collaborative apps.\n- **Authorization** modes: API keys, IAM, **Cognito user pools**, OpenID Connect and Lambda authorizers, and you can combine them.\n- Optional server-side **caching** and offline sync for mobile clients through the Amplify libraries.\n\nWhy the usual distractors lose:\n\n- **API Gateway REST API with several endpoints**: separate round trips and over-fetching, and no built-in real-time subscriptions. (API Gateway WebSocket APIs exist, but you would build the push logic yourself.)\n- **SNS mobile push**: sends notifications to devices, but it does not query, combine or return data.\n- **ALB path-based routing**: forwards each request to one target; it neither aggregates data from several sources nor pushes updates.\n\nDecision rule: **'single request for exactly the fields needed' + 'multiple data sources' + 'real-time updates to clients'** → **AppSync** with resolvers and GraphQL subscriptions.",
+        beyond: true,
       },
       {
         heading: 'Media and mobile notes',
@@ -633,6 +686,7 @@ export default [
       'Device Farm tests apps on real physical devices and desktop browsers hosted by AWS.',
       'Secure ingestion: IAM roles, VPC interface endpoints, TLS-only bucket policies, presigned URLs, Transfer Family, KMS, CloudTrail data events.',
       'Lake Formation provides column-, row- and cell-level permissions on data lake tables.',
+      'AppSync is managed GraphQL: resolvers for DynamoDB, Aurora, OpenSearch, Lambda and HTTP; subscriptions push real-time updates over WebSockets.',
     ],
     examTips: [
       '"Salesforce data into S3 nightly, no custom integration code" → AppFlow (not Lambda, not DataSync).',
@@ -641,14 +695,16 @@ export default [
       '"Convert uploaded videos into formats for different devices" → Elastic Transcoder (in-scope answer).',
       '"Test on many real phone models without buying devices" → Device Farm.',
       '"Producers in a VPC must send to Kinesis without traversing the internet" → interface VPC endpoint + IAM role.',
+      '"One request for exactly the fields a screen needs, from several data sources, with real-time updates" → AppSync (GraphQL resolvers + subscriptions).',
     ],
     pitfalls: [
       'Picking Kinesis Data Streams for video: Kinesis Video Streams is the media service.',
       'Picking DataSync for SaaS application data: it moves files and objects between storage systems.',
       'Treating Elastic Transcoder as a live-streaming service; it converts stored files.',
       'Securing the bucket but leaving producers on the public internet path when "no internet" is required.',
+      'Choosing SNS mobile push for "real-time data updates": it sends notifications but does not query or combine data (AppSync subscriptions do both).',
     ],
-    services: ['appflow', 'data-exchange', 'kinesis-video-streams', 'device-farm', 'rekognition', 's3', 'lake-formation', 'athena', 'kinesis-data-streams', 'data-firehose', 'interface-endpoint', 'kms', 'transfer-family', 'amplify'],
+    services: ['appflow', 'data-exchange', 'kinesis-video-streams', 'device-farm', 'rekognition', 's3', 'lake-formation', 'athena', 'kinesis-data-streams', 'data-firehose', 'interface-endpoint', 'kms', 'transfer-family', 'amplify', 'appsync'],
   },
 
   // ---------------------------------------------------------------------------
@@ -669,12 +725,18 @@ export default [
       {
         heading: 'Immutable infrastructure (Task 2.2)',
         body:
-          "**Mutable** infrastructure is patched, updated and reconfigured in place over time. Servers drift apart, and 'it works on server 3 but not server 7' becomes normal. **Immutable** infrastructure is never modified after deployment: to change anything, you **build a new artifact** (a new AMI, container image or Lambda version), **replace** the running fleet with it, and discard the old one.\n\nBenefits: every instance is identical and reproducible; rollback is just redeploying the previous artifact; no configuration drift; and it forces statelessness (anything stored on the instance is lost on replacement, so state must live in S3, EFS, RDS or DynamoDB).\n\nAWS building blocks:\n\n- **EC2 Image Builder** pipelines bake and test **golden AMIs** (OS patches, agents, hardening) on a schedule.\n- A new **launch template version** references the new AMI.\n- **ASG instance refresh** replaces instances in rolling batches (set minimum healthy percentage, for example 90%, and optional checkpoints), with automatic rollback if health checks fail.\n- Containers: new image in **ECR** → new **ECS task definition revision** → rolling or blue/green deployment.\n- **CloudFormation** keeps stacks reproducible.\n- **Blue/green**: run the new version as a separate fleet and shift traffic with ALB weighted target groups or **Route 53 weighted records**; switch back instantly if needed.",
+          "**Mutable** infrastructure is patched, updated and reconfigured in place over time. Servers drift apart, and 'it works on server 3 but not server 7' becomes normal. **Immutable** infrastructure is never modified after deployment: to change anything, you **build a new artifact** (a new AMI, container image or Lambda version), **replace** the running fleet with it, and discard the old one.\n\nBenefits: every instance is identical and reproducible; rollback is just redeploying the previous artifact; no configuration drift; and it forces statelessness (anything stored on the instance is lost on replacement, so state must live in S3, EFS, RDS or DynamoDB).\n\nAWS building blocks:\n\n- **EC2 Image Builder** pipelines bake and test **golden AMIs** (OS patches, agents, hardening) on a schedule.\n- A new **launch template version** references the new AMI.\n- **ASG instance refresh** replaces instances in rolling batches (set minimum healthy percentage, for example 90%, and optional checkpoints), with automatic rollback if health checks fail.\n- Containers: new image in **ECR** → new **ECS task definition revision** → rolling or blue/green deployment.\n- **CloudFormation** keeps stacks reproducible.\n- **Blue/green**: run the new version as a separate fleet and shift traffic to it (see the next section for ALB weights versus Route 53 weights).\n\n**Rollback** in this model is not 'undo the patch'. It is: point the Auto Scaling group back at the **previous launch template version** (which still references the previous AMI) and run another instance refresh, or redeploy the previous **ECS task definition revision** or Lambda version. The known-good artifact still exists, so rollback is fast and predictable.\n\n**Look-alike answers that do not give you immutability:**\n\n- **Systems Manager Run Command or Patch Manager** makes in-place patching consistent and scriptable, but it still **mutates running servers**. Drift can creep back (a failed patch on 3 of 40 instances), and there is no artifact to roll back to.\n- **EBS snapshots of each instance before patching** give a per-instance restore point, but restoring 40 instances is slow and manual, and nothing stops drift.\n- **AWS Config rules** can **detect** that instances differ, but detection does not make them identical or give you rollback.\n\n**Turning legacy apps into immutable artifacts.** Container images are the purest immutable artifact. For existing Java or .NET applications on servers, **AWS App2Container** discovers the running application, builds a container image, and generates ECS task definitions or Kubernetes manifests (covered fully in the More Containers & Compute lesson). Push the image to **ECR** and run it on **ECS with Fargate** so there are no container hosts to manage either. Contrast: **AWS Application Migration Service (MGN)** rehosts whole servers onto EC2 (lift and shift); it does not containerize anything, and rewriting dozens of apps as Lambda functions is the most manual option of all.",
+      },
+      {
+        heading: 'Blue/green and canary: ALB weights vs Route 53 weights',
+        body:
+          "**Blue/green** means running the current version (blue) and the new version (green) side by side as two complete fleets, then moving traffic from blue to green. A **canary** is the cautious version of that move: send a small slice of real traffic (say 10%) to green first, watch error rates, then go to 100%. Rollback is moving traffic back to blue, which is still running and untouched.\n\nTwo ways to split the traffic, and the difference is **how fast a change takes effect**:\n\n- **ALB weighted target groups**: put the blue Auto Scaling group in one target group and the green group in another, and give the listener rule a **forward action with weights** (for example blue 90, green 10). The ALB applies new weights to new requests **immediately**, so both the shift and the **rollback happen within seconds**. Requires both fleets behind the **same ALB**. (If clients use target group stickiness, already-stuck clients stay put until the stickiness duration ends.)\n- **Route 53 weighted records**: two records with the same name pointing at two load balancers (or Regions), weighted 90/10. It works across load balancers, accounts and Regions, but DNS answers are **cached** by resolvers and clients for the record's **TTL**, and some clients cache even longer. After you change the weights, some users keep going to the old target for minutes, so you **cannot guarantee rollback within seconds**.\n\nDecision rule: **'shift a percentage of traffic and roll back within seconds' on one ALB** → **ALB weighted target groups**. **Blue and green in different Regions or behind different load balancers, and minutes of propagation is acceptable** → Route 53 weighted records (lower the TTL ahead of the cutover).\n\nWhy the other options lose: an **in-place rolling update** mutates running instances and rollback means rolling back through every batch; **stopping the current fleet before launching the new one** causes downtime.",
+        beyond: true,
       },
       {
         heading: 'Service quotas and throttling for standby environments (Task 2.2)',
         body:
-          "**Service quotas** (limits) are **per account, per Region**. Examples: On-Demand EC2 instances are limited by **vCPUs per instance family group**; **5 Elastic IPs** and **5 VPCs** per Region by default; **1,000 concurrent Lambda executions** per Region; API Gateway **10,000 requests per second** steady-state with a 5,000 burst per account per Region.\n\nThe DR trap: a pilot-light or warm-standby Region runs little, so its quotas are often still at **defaults**. On failover the ASG tries to scale from 4 to 80 instances and launches fail at the vCPU limit. Design step: **request quota increases in the DR Region ahead of time to match production**, and monitor usage with **Service Quotas** + **CloudWatch alarms** on usage metrics (and Trusted Advisor service-limit checks). In an Organization, **quota request templates** apply increases to new accounts automatically.\n\n**Throttling**: API Gateway (account, stage, method and usage-plan limits), Lambda concurrency, DynamoDB capacity and AWS API rate limits all return throttling errors (HTTP 429 or `ThrottlingException`). Clients should retry with **exponential backoff and jitter** (AWS SDKs do this by default). To **protect a backend** from being overwhelmed, use API Gateway throttling and **usage plans with API keys**, or put SQS in front as a buffer. Verify those limits are raised in the DR Region too.",
+          "**Service quotas** (limits) are **per account, per Region**. Examples: On-Demand EC2 instances are limited by **vCPUs per instance family group**; **5 Elastic IPs** and **5 VPCs** per Region by default; **1,000 concurrent Lambda executions** per Region; API Gateway **10,000 requests per second** steady-state with a 5,000 burst per account per Region.\n\nThe DR trap: a pilot-light or warm-standby Region runs little, so its quotas are often still at **defaults**. On failover the ASG tries to scale from 4 to 80 instances and launches fail at the vCPU limit. Design step: **request quota increases in the DR Region ahead of time to match production**, and monitor usage with **Service Quotas** + **CloudWatch alarms** on usage metrics (and Trusted Advisor service-limit checks). In an Organization, **quota request templates** apply increases to new accounts automatically.\n\n**Why it must be done in advance**: quota increases are **not instant**. Small requests are often approved automatically, but larger ones are reviewed and can take hours or days, which is far longer than a typical RTO. Asking AWS Support to raise limits at the start of a disaster is the wrong answer. Load-testing the DR Region every month just to discover the limits costs money and manual effort; Service Quotas already shows the applied value and current usage, and **CloudWatch alarms on quota utilization** (for example alarm at 80% of the vCPU quota) give continuous, low-effort warning.\n\n**A hard quota is not throttling.** Throttling is a temporary 'slow down' on request **rate**, so retrying later succeeds. A quota on **how much you can have** (vCPUs running, Elastic IPs allocated) fails every time until it is raised: retrying with backoff just fails more slowly. Switching to smaller instance types does not help either, because the On-Demand quota counts **vCPUs**, so the same quota caps total capacity, and smaller instances may not carry production load. Moving production between Regions does not help because each Region has its own quotas.\n\n**Throttling**: API Gateway (account, stage, method and usage-plan limits), Lambda concurrency, DynamoDB capacity and AWS API rate limits all return throttling errors (HTTP 429 or `ThrottlingException`). Clients should retry with **exponential backoff and jitter** (AWS SDKs do this by default). To **protect a backend** from being overwhelmed, use API Gateway throttling and **usage plans with API keys**, or put SQS in front as a buffer. Verify those limits are raised in the DR Region too.",
       },
       {
         heading: 'NAT instance vs NAT Gateway (Task 4.4)',
@@ -693,6 +755,12 @@ export default [
         },
       },
       {
+        heading: 'Building a NAT instance and rejecting the other egress options',
+        body:
+          "A NAT instance is an ordinary small EC2 instance (for example a **t4g.nano**, a few dollars a month) configured to forward traffic:\n\n- Launch it in a **public subnet** (one whose route table sends 0.0.0.0/0 to the internet gateway) with a **public IP or Elastic IP**, so it can reach the internet itself.\n- **Disable the source/destination check**. By default EC2 drops any packet whose source or destination is not the instance's own IP; a NAT forwards other machines' packets, so this check must be off.\n- Configure IP forwarding and masquerading in the OS (or use a NAT-ready AMI).\n- In the **private subnets' route tables**, send 0.0.0.0/0 to the NAT instance.\n- Its security group must allow inbound traffic from the private subnets and outbound to the internet.\n\nThe cost difference is the reason it still appears: a NAT Gateway bills every hour it exists plus every GB it processes, even when a dev VPC downloads packages only a few times a day. The trade-off is that you patch it, it is a single point of failure, and bandwidth is limited by the instance type, which is acceptable when the question says **'accepts brief outages and manual maintenance'**.\n\nOther options that look plausible for egress, and why they lose for one small VPC:\n\n- **Centralized egress through a Transit Gateway to a shared egress VPC** saves money when **many VPCs** would otherwise each run their own NAT Gateways. For a single small VPC it only adds Transit Gateway attachment hours and per-GB data processing on top of the NAT in the egress VPC.\n- **Interface VPC endpoints (PrivateLink)** reach **AWS services and PrivateLink-enabled services**, not arbitrary internet sites such as public package repositories, and each endpoint bills per hour per AZ. (A free gateway endpoint exists only for S3 and DynamoDB.)",
+        beyond: true,
+      },
+      {
         heading: 'NAT placement: one per AZ or one shared',
         body:
           "A NAT Gateway lives in **one AZ**. A single shared NAT Gateway for a multi-AZ VPC is cheapest in hours, but instances in other AZs pay **cross-AZ data charges** to reach it and lose outbound access if that AZ fails. **One NAT Gateway per AZ**, each private route table pointing at its local NAT, costs more hours but avoids cross-AZ fees and survives an AZ loss.\n\n- Production answer → **one NAT Gateway per AZ**.\n- Cost-only dev/test answer → **one shared NAT Gateway, or a small NAT instance**.\n- 'Dev/test VPC with minimal outbound traffic pays more for NAT than for instances' → replace with a t4g.nano NAT instance (or a single shared NAT). Removing outbound access breaks package installs; adding a NAT per AZ increases cost.",
@@ -700,7 +768,7 @@ export default [
       {
         heading: 'VPN bandwidth: single vs multiple tunnels (Task 4.4)',
         body:
-          "A Site-to-Site VPN connection has **two tunnels of about 1.25 Gbps each**. When the VPN terminates on a **Virtual Private Gateway (VGW)**, only one tunnel carries traffic at a time (active/standby) and there is no aggregation across connections, so throughput is capped at roughly **1.25 Gbps**.\n\nTo go higher, terminate VPNs on a **Transit Gateway** and enable **ECMP (equal-cost multi-path)** routing with **BGP** (dynamic routing). Traffic flows are spread across all tunnels of all VPN connections: for example **4 connections × 2 tunnels × 1.25 Gbps ≈ 10 Gbps** aggregate. Each individual flow still tops out at about 1.25 Gbps. The customer gateway must also support ECMP.\n\n**Direct Connect** for consistent bandwidth and latency: **hosted connections** from a partner (50 Mbps to 10 Gbps) for moderate steady loads; **dedicated connections** of 1, 10, 100 or 400 Gbps for large ones. For resilience add a second DX at a different location, or a Site-to-Site VPN as backup. **Accelerated Site-to-Site VPN** (on a TGW) routes tunnels through the Global Accelerator edge network for more consistent performance over long distances.",
+          "A Site-to-Site VPN connection has **two tunnels of about 1.25 Gbps each**. When the VPN terminates on a **Virtual Private Gateway (VGW)**, only one tunnel carries traffic at a time (active/standby) and there is no aggregation across connections, so throughput is capped at roughly **1.25 Gbps**.\n\nTo go higher, terminate VPNs on a **Transit Gateway** and enable **ECMP (equal-cost multi-path)** routing with **BGP** (dynamic routing). Traffic flows are spread across all tunnels of all VPN connections: for example **4 connections × 2 tunnels × 1.25 Gbps ≈ 10 Gbps** aggregate. Each individual flow still tops out at about 1.25 Gbps. The customer gateway must also support ECMP.\n\n**Direct Connect** for consistent bandwidth and latency: **hosted connections** from a partner (50 Mbps to 10 Gbps) for moderate steady loads; **dedicated connections** of 1, 10, 100 or 400 Gbps for large ones. For resilience add a second DX at a different location, or a Site-to-Site VPN as backup. **Accelerated Site-to-Site VPN** (on a TGW) routes tunnels through the Global Accelerator edge network for more consistent performance over long distances.\n\nWhat does **not** raise VPN bandwidth (common distractors):\n\n- **Asking AWS Support to raise the VGW or tunnel bandwidth**: the roughly 1.25 Gbps per-tunnel limit is fixed, and a VGW does not do ECMP across connections, so there is nothing to raise.\n- **Enabling accelerated VPN**: it improves **latency and stability** by entering the AWS network at a nearby edge location, but each tunnel is still capped at about 1.25 Gbps.\n- **VPC peering**: it connects **two VPCs** only; it cannot connect to an on-premises network.\n- **Direct Connect** would solve it, but it needs a physical cross-connect at a DX location (or a partner circuit), which takes weeks and is impossible when the question says it cannot be installed at the site. If encryption is required, plain DX is also not encrypted on its own.\n\nDecision rule: **'more than 1.25 Gbps of encrypted throughput, soon, no Direct Connect'** → several Site-to-Site VPN connections on a **Transit Gateway with ECMP and BGP**.",
       },
       {
         heading: 'Exam angle',
@@ -776,6 +844,11 @@ export default [
       'Site-to-Site VPN: 2 tunnels of about 1.25 Gbps; on a VGW only one is active.',
       'Transit Gateway + ECMP + BGP aggregates bandwidth across multiple VPN connections (4 connections ≈ 10 Gbps).',
       'Direct Connect: hosted 50 Mbps-10 Gbps; dedicated 1, 10, 100 or 400 Gbps.',
+      'Rollback in immutable infrastructure = previous launch template version (previous AMI) + instance refresh, or previous ECS task definition revision.',
+      'ALB weighted target groups shift and roll back traffic within seconds; Route 53 weighted records are delayed by DNS caching (TTL).',
+      'Quota increases can take hours or days to approve; hard quotas are not fixed by retries or smaller instances (the On-Demand quota counts vCPUs).',
+      'NAT instance: public subnet, public or Elastic IP, source/destination check disabled, private route tables send 0.0.0.0/0 to it.',
+      'Accelerated VPN improves latency and stability but does not raise the 1.25 Gbps per-tunnel limit.',
     ],
     examTips: [
       '"Eliminate configuration drift / identical instances / rapid rollback" → golden AMI + launch template version + ASG instance refresh.',
@@ -784,6 +857,8 @@ export default [
       '"Cheapest outbound internet for a low-traffic dev VPC" → small NAT instance (or one shared NAT Gateway).',
       '"Production private subnets in 3 AZs need resilient outbound access" → one NAT Gateway per AZ.',
       '"VPN throughput must exceed 1.25 Gbps" → multiple VPN connections on a Transit Gateway with ECMP.',
+      '"Send 10% of traffic to the new version and roll back within seconds" → blue and green target groups behind one ALB with weighted forwarding.',
+      '"Containerize legacy Java/.NET apps with least effort, no hosts to manage" → App2Container, ECR, ECS on Fargate.',
     ],
     pitfalls: [
       'Patching instances in place with SSH when the question asks for consistency and fast rollback.',
@@ -791,6 +866,10 @@ export default [
       'Forgetting to disable source/destination check on a NAT instance.',
       'Expecting a VGW to aggregate multiple VPN tunnels; ECMP aggregation requires a Transit Gateway.',
       'Thinking ECMP raises the speed of a single flow beyond about 1.25 Gbps.',
+      'Choosing Run Command or Patch Manager for "identical instances and fast rollback"; they still patch in place.',
+      'Using Route 53 weighted records when rollback must take seconds; cached DNS answers keep some clients on the old target.',
+      'Retrying with backoff against a hard quota; backoff fixes throttling, not "you have hit the vCPU limit".',
+      'Choosing interface endpoints for general internet egress; they only reach AWS and PrivateLink services.',
     ],
     prosCons: [
       {
@@ -818,7 +897,7 @@ export default [
         useWhen: 'Steady multi-Gbps hybrid traffic.',
       },
     ],
-    services: ['ami', 'launch-template', 'auto-scaling', 'service-quotas', 'trusted-advisor', 'cloudwatch', 'api-gateway', 'nat-gateway', 'nat-instance', 'site-to-site-vpn', 'transit-gateway', 'direct-connect', 'lambda', 'route53'],
+    services: ['ami', 'launch-template', 'auto-scaling', 'service-quotas', 'trusted-advisor', 'cloudwatch', 'api-gateway', 'nat-gateway', 'nat-instance', 'site-to-site-vpn', 'transit-gateway', 'direct-connect', 'lambda', 'route53', 'alb', 'ecr', 'ecs', 'fargate', 'interface-endpoint'],
   },
 
   // ---------------------------------------------------------------------------

@@ -84,6 +84,18 @@ Fits: shared content directories, user home directories, CMS uploads shared by a
 
 Then, and only then, worry about cost tiers (storage classes, volume types). A tempting distractor is a cheaper product from the **wrong paradigm**, such as "mount S3 on all 20 servers with a FUSE tool" for a shared POSIX directory. Object storage cannot do byte-level writes or file locks, so that answer is wrong however cheap it looks.`,
       },
+      {
+        heading: 'Making S3 look like a disk: Mountpoint and why it does not change the paradigm',
+        beyond: true,
+        body: `**FUSE** (Filesystem in Userspace) is a Linux mechanism that lets a program pretend to be a filesystem. **Mountpoint for Amazon S3** is AWS's own FUSE client: it mounts a bucket as a folder, so an application can \`open()\` and \`read()\` objects as if they were files. It is excellent for **reading** large datasets (analytics, ML training) and for **writing new files from start to finish**.
+
+What it cannot do is turn object storage into block storage. Under the mount, every file is still a whole S3 object, so Mountpoint does **not** support:
+
+- **Modifying an existing file in place** or writing at random offsets (the most it can do is replace a whole file),
+- **File locking** or the full POSIX semantics a database or shared application expects.
+
+So when a question proposes "keep the database data directory on S3 through Mountpoint to save money", reject it: a database constantly rewrites small pages in the middle of its files, which needs a **block device** (EBS). The same logic rules out **S3 Express One Zone** for a database: it is faster object storage, but still whole-object writes, not a disk.`,
+      },
     ],
     diagram: {
       title: 'Three ways to reach data',
@@ -151,6 +163,7 @@ Then, and only then, worry about cost tiers (storage classes, volume types). A t
     pitfalls: [
       'Picking EBS Multi-Attach for a shared web directory: it is single-AZ, io1/io2 only, max 16 instances and needs a cluster filesystem.',
       'Mounting S3 with a FUSE tool to fake a shared filesystem: no locking, no partial writes, not POSIX.',
+      'Running a database on Mountpoint for Amazon S3 or S3 Express One Zone: both are still object storage and cannot update a file in place.',
       'Assuming EBS is Regional: a volume lives in one AZ and only attaches to instances in that AZ.',
       'Treating instance store like EBS: its data is lost on stop, hibernate or terminate.',
     ],
@@ -213,7 +226,11 @@ Each **object** is addressed by its **key**, the full string after the bucket na
       },
       {
         heading: 'Getting big data in and out fast',
-        body: `Four features cover nearly every "upload/download is slow" question.`,
+        body: `Four features cover nearly every "upload/download is slow" question.
+
+Why multipart matters for reliability: a **single PUT is all or nothing**. If the connection drops at 39 GB of a 40 GB file, the whole upload starts again. With multipart, each part succeeds or fails on its own, so only the failed part is resent. **Versioning does not help here**: it keeps old versions of objects that finished uploading, and has nothing to do with resuming a half-sent upload.
+
+Direction matters too: **byte-range fetches are reads** (partial GETs), so they never speed up uploads, and **Transfer Acceleration helps only clients far from the bucket's Region**, not compute already inside it.`,
         table: {
           headers: ['Feature', 'What it does', 'Rule / number', 'Pick when'],
           rows: [
@@ -229,6 +246,10 @@ Each **object** is addressed by its **key**, the full string after the bucket na
         body: `S3 partitions a bucket by key prefix automatically. Each prefix supports **3,500 writes and 5,500 reads per second**, and there is **no limit on the number of prefixes**. So a bucket using 10 prefixes (\`img/0/\` … \`img/9/\`) can serve 55,000 GETs per second.
 
 If an application gets **HTTP 503 Slow Down** errors, the fix is to spread keys over more prefixes (date-based like \`2026/08/30/\` or a short hash) and use retries with exponential backoff. S3 scales up partitions gradually, so a sudden 10x burst may see some 503s while it adapts.
+
+The per-prefix rate is **how S3 is designed, not an adjustable quota**: AWS Support cannot raise it, so "request a higher limit" is always a distractor. Nor do unrelated features help: **Transfer Acceleration** shortens the network path for distant clients, and **storage classes** change price and retrieval behaviour; neither changes how many requests a prefix can absorb.
+
+**Sharding without losing date partitions.** Analytics tools like Athena often rely on keys such as \`logs/date=2026-10-30/\` (the \`name=value\` style is called a Hive-style partition) so a query for one day reads only that day's prefix. If one day's writes exceed 3,500 PUTs per second, don't switch to fully random keys (that destroys the date partition). Add a shard level **under** the date instead: \`logs/date=2026-10-30/shard=00/\` to \`shard=07/\` gives eight prefixes (about 28,000 PUTs per second) and the date is still the top-level partition.
 
 For read-heavy content served to the public, the better fix is often **CloudFront** in front of the bucket: edge caching removes most GETs from S3 entirely.
 
@@ -250,9 +271,20 @@ Notifications are typically delivered in seconds and are **at-least-once**, so m
         beyond: true,
         body: `These are newer than most study material but can appear as answer options:
 
-- **S3 Express One Zone**: a high-performance class in **directory buckets** located in a single AZ you choose. Single-digit millisecond latency, up to 10x faster than Standard, and hundreds of thousands of requests per second. Use it for ML training data or analytics scratch that sits next to compute in the same AZ. Because it's one AZ, it's not for the only copy of important data.
+- **S3 Express One Zone**: a high-performance class in **directory buckets** located in a single AZ you choose. Single-digit millisecond latency, up to 10x faster than Standard, and hundreds of thousands of requests per second. Use it for ML training data or analytics scratch that sits next to compute in the same AZ. Because it's one AZ, it's not for the only copy of important data. When the bottleneck is S3 request latency for compute **already in the Region**, Express One Zone is the answer; Transfer Acceleration (for distant uploaders) and CloudFront (a cache for internet viewers) add nothing there, and One Zone-IA is a cheaper class, not a faster one.
 - **Larger objects**: in December 2025 AWS raised the maximum object size from 5 TB to **50 TB**. Exam questions written earlier still assume 5 TB; the multipart rule (single PUT limited to 5 GB) is unchanged.
 - **S3 Select** is closed to new customers (since July 2024); use Amazon Athena to query data in place with SQL instead.`,
+      },
+      {
+        heading: 'Reading only what you need: byte ranges, Athena and S3 Select',
+        beyond: true,
+        body: `Three ways to avoid downloading whole objects, each for a different kind of data:
+
+- **Byte-range fetch** works on **any** object, including proprietary binary formats (seismic files, video, images). Send a GET with a \`Range: bytes=0-4095\` header and S3 returns exactly those bytes. "Read only the 4 KB header of millions of binary files" is a byte-range question, because no SQL tool can parse a format it doesn't understand.
+- **Amazon Athena** is **serverless SQL over files in S3**. You define a table over a prefix (stored in the AWS Glue Data Catalog), then run normal SQL including **filters, aggregations and joins across many files**. It works on structured and semi-structured formats (CSV, JSON, Parquet, ORC), not arbitrary binary. There are no servers or clusters; you pay **per TB of data scanned** (about $5 per TB), so you pay only for the queries you run. Partitioned keys (such as \`date=2026-10-30/\`) and columnar formats cut the bytes scanned.
+- **S3 Select** filtered rows inside **one object per request** (CSV, JSON or Parquet only) and **could not join** across files. It is closed to new customers since July 2024, so for a new account it is never the answer.
+
+How to reject the other options: **Amazon EMR** (managed Spark/Hadoop clusters) can run the same queries but you must launch, size and stop a cluster, which is more operational overhead than Athena. **Copying data to a database on EC2** adds servers and delay. Changing the **storage class** never changes how many bytes a read transfers.`,
       },
     ],
     diagram: {
@@ -320,6 +352,8 @@ Notifications are typically delivered in seconds and are **at-least-once**, so m
       '"Process every uploaded file automatically" → S3 event notification to Lambda (or SQS to buffer bursts).',
       '"Several consumers need the same S3 event with advanced filtering" → EventBridge, not native notifications.',
       '"Download only the header of large files" or "parallelise a big download" → byte-range fetches.',
+      '"Filter, aggregate and join CSV/JSON/Parquet in S3, serverless, pay per query" → Athena (S3 Select is closed to new customers and cannot join).',
+      '"503s on a date-partitioned prefix used by Athena" → add a shard level under the date, not random keys and not a quota increase.',
       'Durability = not losing data; availability = reaching it now. If a question asks about surviving an AZ loss, durability across AZs is the property.',
     ],
     pitfalls: [
@@ -588,7 +622,14 @@ New buckets are private by default: Block Public Access on, ACLs disabled, and S
 - Block public access granted through **new ACLs** / through **any ACLs**.
 - Block public access granted through **new bucket policies** / through **any public bucket or access point policies** (this one also restricts cross-account access for a bucket whose policy is public).
 
-BPA **overrides** any policy or ACL that tries to make data public. It's on by default for all new buckets (since April 2023). In a "bucket was accidentally made public" question, BPA at the **account level** (or as an SCP-enforced organization standard) is the preventive control. **Amazon Macie** and **IAM Access Analyzer for S3** are the detective tools that report public or cross-account buckets.`,
+BPA **overrides** any policy or ACL that tries to make data public. It's on by default for all new buckets (since April 2023). In a "bucket was accidentally made public" question, BPA at the **account level** (or as an SCP-enforced organization standard) is the preventive control. Encryption and versioning are not exposure controls: S3 decrypts objects for anyone allowed to read them, public included.
+
+**Detective tools: which one answers which question?** They are easy to mix up:
+
+- **IAM Access Analyzer for S3**: "**who can reach** this bucket from outside?" It analyses bucket policies, ACLs and access points and reports buckets that are public or shared with accounts outside your organization (your "zone of trust").
+- **Amazon Macie**: "**what is inside** this bucket?" It scans objects with machine learning and pattern matching to find sensitive data such as PII (passport numbers, credit cards). It also flags public buckets, but it **reports, it does not block**.
+- **Amazon GuardDuty S3 Protection**: "is someone **behaving suspiciously** against S3 right now?" It watches API activity (unusual locations, data exfiltration patterns), not configuration or content.
+- **Amazon Inspector** scans EC2, container images and Lambda for software vulnerabilities; it does not look at S3 data at all.`,
       },
       {
         heading: 'Bucket policies: the main tool for bucket-wide rules',
@@ -599,6 +640,11 @@ BPA **overrides** any policy or ACL that tries to make data public. It's on by d
 - **Restrict to your organization**: Deny unless \`aws:PrincipalOrgID\` equals \`o-abc123\`, so one statement covers every current and future account.
 - **Restrict to a network path**: Deny unless \`aws:SourceVpce\` is your VPC endpoint ID (or \`aws:SourceIp\` is your office range).
 - **Require encryption headers**: Deny PutObject unless \`s3:x-amz-server-side-encryption\` is \`aws:kms\`.
+- **Require one specific KMS key**: Deny PutObject when \`s3:x-amz-server-side-encryption-aws-kms-key-id\` does not equal that key's ARN.
+
+**Why enforcement is always a Deny.** An Allow only adds permission; it never takes away permission that some other policy (an IAM policy, another statement) already grants. So "Allow when \`aws:SecureTransport\` is true" does nothing to stop a plain-HTTP request that another policy allows. "Deny when \`aws:SecureTransport\` is false" blocks it everywhere, because an explicit Deny wins. If a question says **enforce** or **require**, look for the Deny statement.
+
+The **20 KB size limit cannot be raised** (there is no quota request for it). Listing hundreds of account IDs, or one statement per application, eventually hits it; the fixes are \`aws:PrincipalOrgID\` for "every account in the organization" and access points for "many applications".
 
 Rule of thumb: IAM policies say "what can this **user** do across AWS"; bucket policies say "who can touch **this bucket**".`,
       },
@@ -607,6 +653,8 @@ Rule of thumb: IAM policies say "what can this **user** do across AWS"; bucket p
         body: `**ACLs** (access control lists) are the original per-bucket and per-object grant mechanism, predating IAM. They can't express conditions or denies and are hard to audit.
 
 **S3 Object Ownership** controls them. The setting **Bucket owner enforced** (the default for new buckets since April 2023) **disables ACLs entirely** and makes the bucket owner own every object, even ones uploaded by other accounts. That fixes the classic problem where a partner account uploads a file and the bucket owner can't read it.
+
+Why the problem existed: with ACLs enabled, an object belongs to the **account that uploaded it**, not the bucket owner. The old workaround was asking every uploader to add the \`bucket-owner-full-control\` ACL to each PUT, which breaks the moment one partner forgets. Buckets created before April 2023 may still have ACLs enabled, so for an older bucket the fix is to **switch Object Ownership to Bucket owner enforced**: ownership becomes automatic and no partner code changes. ACLs also **cannot grant by prefix** (they attach to a whole bucket or to one object), another reason they are never the scalable answer.
 
 Only pick an ACL-based answer in a niche legacy case, such as S3 server access logging to a bucket that still requires the log-delivery ACL (modern log delivery uses a bucket policy instead).`,
       },
@@ -617,14 +665,25 @@ Only pick an ACL-based answer in a niche legacy case, such as S3 server access l
 - Max lifetime: up to **7 days** when signed with IAM user keys; it can't outlive temporary credentials (a role session of 1 hour gives at most about 1 hour). The console caps it at 12 hours.
 - Patterns: "let a user download a private invoice for 24 hours"; "let the browser **upload directly to S3**" so app servers never handle the bytes.
 
-**S3 Access Points**: named network endpoints for one bucket, each with **its own policy** (and optionally restricted to a single VPC). With 30 teams sharing a data-lake bucket, give each team an access point instead of one 20 KB monster bucket policy. Limit: 10,000 access points per Region per account by default.
+**S3 Access Points**: named network endpoints for one bucket, each with **its own policy** (and optionally restricted to a single VPC). With 30 teams sharing a data-lake bucket, give each team an access point instead of one 20 KB monster bucket policy. The bucket policy then just **delegates** access control to the account's access points (one statement), and each team edits only its own access point policy, so a change for one team can't break another. An access point created with a **VPC network origin** accepts requests only from that VPC. Limit: 10,000 access points per Region per account by default.
+
+Other "share with many" options, and why they lose: per-customer **IAM users** create long-term credentials that don't scale; a **Cognito identity pool** works for app users but is far more setup than a presigned URL for a single download; splitting data into **many buckets with replication** adds cost and lag for no security gain.
 
 **S3 Object Lambda**: an access point that runs a Lambda function on GET, so a consumer sees **transformed** data (PII redacted, images resized, format converted) without you storing a second copy. AWS stopped onboarding new customers to Object Lambda in November 2025, but it still appears as an exam answer for "transform on read without duplicating data".`,
       },
       {
         heading: 'Encryption options',
         beyond: true,
-        body: `All new objects are encrypted at rest by default with **SSE-S3** (since January 2023). Your choices:`,
+        body: `All new objects are encrypted at rest by default with **SSE-S3** (since January 2023).
+
+Rules that decide the tricky questions:
+
+- A bucket has **exactly one default encryption type**. You cannot stack SSE-S3 and SSE-KMS as two defaults to get "two layers". If a standard demands **two independent layers** with keys in KMS, the built-in answer is **DSSE-KMS** (dual-layer SSE-KMS): set it as the bucket default and every upload gets both layers with **no application change**.
+- **Client-side encryption** (for example with the AWS Encryption SDK) also gives an extra layer, but every application must change its upload code, so it loses on "least operational overhead".
+- **SSE-C** is the only server-side option where **AWS never stores the key**. The client sends the key with every PUT and GET (HTTPS is mandatory); S3 encrypts or decrypts, then discards the key, keeping only a salted HMAC of it to check that later requests supply the same key. Lose the key and the data is unreadable. AWS now disables SSE-C by default on new buckets, so it must be explicitly allowed in the bucket's encryption settings.
+- KMS variations still **store keys inside AWS**: **imported key material** lives in KMS once imported, and a **CloudHSM custom key store** keeps keys in HSMs (hardware security modules) that you control but that run in AWS. They fail "AWS must never store our keys"; SSE-C (S3 does the crypto) or client-side encryption (you do the crypto) pass it.
+
+Your choices:`,
         table: {
           headers: ['Option', 'Who manages the key', 'Audit trail', 'Pick when'],
           rows: [
@@ -645,7 +704,9 @@ The production pattern is **CloudFront in front of a private bucket** with **Ori
 - The bucket stays **fully private**, BPA on.
 - The bucket policy allows only the \`cloudfront.amazonaws.com\` service principal, with a condition on your distribution's ARN.
 - Viewers get **HTTPS**, a **custom domain** with a free certificate from **ACM** (which must be in us-east-1 for CloudFront), edge **caching** and optional **AWS WAF**.
-- OAC replaces the legacy **OAI** (Origin Access Identity) and supports SSE-KMS objects, PUT/DELETE and all Regions. If you see OAI, it still works, but OAC is the current answer.
+- OAC replaces the legacy **OAI** (Origin Access Identity) and supports SSE-KMS objects, PUT/DELETE and all Regions. If you see OAI, it still works, but OAC is the current answer, and OAI is outright wrong when objects are encrypted with **SSE-KMS** (OAI cannot use KMS keys).
+- With **SSE-KMS objects**, the bucket policy is not enough: S3 must decrypt with the KMS key on CloudFront's behalf, so the **KMS key policy** must also allow \`cloudfront.amazonaws.com\` to use the key (\`kms:Decrypt\`), scoped with \`aws:SourceArn\` to your distribution. Forget this and every request fails with access denied.
+- OAC works with the bucket's **REST endpoint**, not the website endpoint. Tricks like "use the website endpoint and only allow requests with a secret \`Referer\` header" fail: the website endpoint needs a public bucket, and a Referer header is trivial to forge.
 
 A related private-network control: EC2 instances in a private subnet should reach S3 through a **gateway VPC endpoint** (free), and the bucket policy can require \`aws:SourceVpce\` so the data is unreachable from the internet even with valid credentials.`,
       },
@@ -719,6 +780,12 @@ A related private-network control: EC2 instances in a private subnet should reac
       '"Static website with HTTPS and a private bucket" → CloudFront with Origin Access Control, not S3 website hosting alone.',
       '"Many applications share one bucket and the bucket policy is unmanageable" → S3 Access Points, one per application.',
       '"Audit who used the encryption key" or "control key rotation" → SSE-KMS with a customer managed key.',
+      '"Enforce TLS and a specific KMS key on uploads" → two Deny statements: aws:SecureTransport false, and s3:x-amz-server-side-encryption-aws-kms-key-id not equal to the key ARN.',
+      '"Two independent layers of encryption, keys in KMS, no app changes" → DSSE-KMS as the bucket default.',
+      '"AWS must never store our keys, but S3 should do the encryption" → SSE-C.',
+      '"Partner uploads are owned by the partner account, fix it without partner code changes" → Object Ownership: Bucket owner enforced.',
+      '"Which buckets are public or shared outside the org?" → IAM Access Analyzer. "Which buckets contain PII?" → Macie.',
+      '"CloudFront + private bucket + SSE-KMS objects" → OAC, plus a KMS key policy that lets CloudFront decrypt.',
     ],
     pitfalls: [
       'Using ACLs for new designs: AWS recommends disabling them with Bucket owner enforced.',
@@ -727,6 +794,9 @@ A related private-network control: EC2 instances in a private subnet should reac
       'Assuming a presigned URL works after the signer\'s role session expires: it stops at the credential expiry.',
       'Treating SSE-C as "AWS manages the key": the customer supplies the key on every request.',
       'Using a "Deny DeleteObject" bucket policy as an immutability control: admins can edit the policy (use Object Lock).',
+      'Using an Allow with aws:SecureTransport true to "enforce" TLS: an Allow never blocks anything; only a Deny enforces.',
+      'Asking AWS to raise the 20 KB bucket policy limit: it is fixed; use aws:PrincipalOrgID or access points.',
+      'Choosing OAI for SSE-KMS objects: OAI cannot use KMS keys; OAC can.',
     ],
     prosCons: [
       {
@@ -830,7 +900,14 @@ Rules of the road:
 - **Minimum storage duration**: delete or transition an object out of Standard-IA after 10 days and you are still billed for **30 days**. Glacier IR and Flexible bill a 90-day minimum; Deep Archive 180 days.
 - **Minimum billable object size**: Standard-IA, One Zone-IA and Glacier IR bill each object as at least **128 KB**. A 4 KB file costs as if it were 128 KB.
 - **Archive metadata overhead**: every object in Glacier Flexible or Deep Archive carries about **40 KB** of extra billed metadata (32 KB at the Glacier rate, 8 KB at Standard). Millions of tiny files: zip or tar them first.
-- **Per-request costs** rise as you go down the ladder; lifecycle transitions are charged per 1,000 objects.`,
+- **Per-request costs** rise as you go down the ladder; lifecycle transitions are charged per 1,000 objects.
+
+**Where hidden storage really comes from.** When a bill grows faster than the current objects, the usual culprits are **noncurrent versions** (in a versioned bucket every overwrite keeps the old copy) and **incomplete multipart uploads**. Neither shows in a normal listing. The fixes are lifecycle rules: **NoncurrentVersionExpiration** and **AbortIncompleteMultipartUpload**. For small objects (under 128 KB) a transition to an IA class makes things worse because of the 128 KB minimum billable size.
+
+**Features that do not cut storage cost**, often offered as distractors:
+
+- **Requester Pays**: a bucket setting that makes whoever downloads the data pay the **request and data transfer** charges (useful for sharing big public datasets). The bucket owner still pays for **storage**.
+- **Transfer Acceleration**: adds a per-GB fee to speed up uploads; it never reduces stored bytes.`,
       },
       {
         heading: 'Restoring archived objects',
@@ -981,7 +1058,11 @@ A **snapshot** is a photo of the drive kept in the company safe (S3). Each new p
 - You pay for **provisioned** GB (and provisioned IOPS/throughput where applicable), even if the disk is empty.
 - **Elastic Volumes** let you increase size, change type (gp2 → gp3) or change IOPS **without detaching**; you then extend the filesystem in the OS. You can never shrink a volume, and you must wait for a modification to complete (historically 6 hours) before the next one.
 
-Performance is capped by **both** the volume's provisioned IOPS/throughput **and** the instance's **EBS bandwidth**. A 64,000-IOPS io2 volume on a small instance type is throttled to whatever that instance supports; check the instance's "EBS-optimized" limits before buying IOPS.`,
+Performance is capped by **both** the volume's provisioned IOPS/throughput **and** the instance's **EBS bandwidth**. A 64,000-IOPS io2 volume on a small instance type is throttled to whatever that instance supports; check the instance's "EBS-optimized" limits before buying IOPS.
+
+How to diagnose which cap you are hitting: if monitoring shows the volume flat-lining at exactly the **instance type's documented maximum EBS IOPS or throughput**, the instance is the bottleneck. Buying more volume IOPS, switching volume type, or adding volumes all fail, because every byte still flows through the same capped instance. The cheapest fix is a **larger size in the same instance family**, whose EBS-optimized limit is higher.
+
+**RAID 0 across EBS volumes** (striping data over several volumes inside the OS) adds their performance together, but it is rarely the exam answer today: you must build and manage the array, it has **no redundancy** (lose one volume and the whole array is gone), it is still capped by the instance's EBS bandwidth, and a single gp3 or io2 volume can now be provisioned with the performance directly through an Elastic Volumes change.`,
       },
       {
         heading: 'Volume types: decide by IOPS, throughput and boot',
@@ -1367,7 +1448,11 @@ A common distractor pairs "maximum IOPS" with "data must survive a stop". That c
       },
       {
         heading: 'EFS storage classes, throughput and performance modes',
-        body: `EFS **lifecycle management** moves files that haven't been read for a set time (for example 30 days) to cheaper classes and, optionally, back to Standard on the next access. Cold data costs over 90% less than Standard.`,
+        body: `EFS **lifecycle management** moves files that haven't been read for a set time (for example 30 days) to cheaper classes and, optionally, back to Standard on the next access. Cold data costs over 90% less than Standard.
+
+**Throughput modes explained.** **Bursting** (the old default) ties throughput to how much data you store: a small file system gets a small baseline plus a bucket of burst credits. A 200 GB file system that needs 1 GB/s several times a day drains its credits and throughput collapses. The old hack was writing dummy data to raise the baseline, which means paying for storage you don't need. **Elastic** throughput (the current default and AWS recommendation) scales up and down instantly and bills for throughput actually used, which is ideal for **spiky, unpredictable** workloads. **Provisioned** throughput charges for a fixed MB/s **around the clock**, so it only wins when demand is high and steady.
+
+**Performance modes are about latency, not throughput credits.** **General Purpose** has the lowest per-operation latency, which matters for workloads with many small files and metadata operations (CMS, web content, home directories). **Max I/O** trades **higher latency** for more parallelism and is a legacy option; it does not fix exhausted burst credits and is not available with One Zone or Elastic throughput.`,
         table: {
           headers: ['Setting', 'Options', 'What to pick'],
           rows: [
@@ -1384,7 +1469,8 @@ A common distractor pairs "maximum IOPS" with "data must survive a stop". That c
 - **Identity**: an **EFS file system policy** (resource-based, like a bucket policy) can require IAM authorization, force TLS, or deny root access. Clients authorize using the EFS mount helper with \`-o iam\`.
 - **EFS Access Points**: application-specific entry points that force a **POSIX user/group ID** and a **root directory**. Example: a Lambda function's access point maps every write to UID 1001 under \`/lambda-data\`, so it can't see other apps' folders.
 - **Encryption at rest** with KMS is chosen **at creation** (to encrypt an existing unencrypted filesystem, create a new one and copy the data with DataSync). **Encryption in transit** is TLS, turned on with the mount helper option \`-o tls\`.
-- **EFS Replication** keeps a read-only copy in another Region or AZ, with most changes copied within 15 minutes, for DR.`,
+- **EFS Replication** keeps a read-only copy in another Region or AZ, with most changes copied within 15 minutes, for DR. To fail over, you delete the replication configuration, which makes the destination file system writable.
+- **Replication is not backup.** Replication copies deletions and bad writes to the destination within minutes, so it can't bring back a file a user deleted yesterday. For that, protect the file system with an **AWS Backup** plan (for example daily recovery points with a retention period) and restore individual files from a recovery point. DR across Regions = EFS Replication; undo mistakes = AWS Backup; you often need both. (S3 Cross-Region Replication only works on S3 buckets, never on EFS.)`,
       },
       {
         heading: 'FSx for Windows File Server',
@@ -1512,6 +1598,8 @@ Trigger phrases: "HPC", "high-performance computing", "machine-learning training
       '"Migrate an on-premises ZFS file server" → FSx for OpenZFS.',
       '"Lambda functions need a shared filesystem larger than /tmp" → EFS with an access point.',
       '"Reduce EFS cost for files rarely accessed after a month" → EFS lifecycle management to Infrequent Access / Archive.',
+      '"EFS burst credits run out during short spikes, light use otherwise" → Elastic throughput, not Provisioned (paid 24/7) or Max I/O (a latency mode).',
+      '"EFS copy in another Region within minutes" → EFS Replication; "restore files users deleted" → AWS Backup.',
     ],
     pitfalls: [
       'Picking EFS for Windows workloads: EFS is NFS and Linux only.',
@@ -1593,7 +1681,8 @@ Staff never change how they work. The office stops buying filing cabinets. And i
 - **Storage classes**: files can land in S3 Standard, Standard-IA, One Zone-IA or Intelligent-Tiering, and **S3 lifecycle rules** can later archive them to Glacier. (Archived objects must be restored in S3 before the gateway can read them.)
 - **SMB shares** authenticate against Active Directory; NFS shares use client IP allow lists and squash settings.
 - If other processes write to the bucket directly, the gateway won't see those objects until you **refresh the cache** (RefreshCache API or an automated refresh schedule).
-- Pricing: S3 storage and requests plus a small per-GB gateway fee for data written to AWS.`,
+- Pricing: S3 storage and requests plus a small per-GB gateway fee for data written to AWS.
+- Running the gateway **on EC2** is possible, but it is a single instance with no Multi-AZ failover and it still stores files as S3 objects. It is not a substitute for a highly available file share for EC2 workloads (for Windows apps in AWS that is FSx for Windows File Server Multi-AZ).`,
       },
       {
         heading: 'Volume and Tape Gateways in detail',
@@ -1736,7 +1825,11 @@ Your **mail** keeps arriving at the old address, so you set up forwarding: the o
         heading: 'Online vs offline: do the bandwidth math first',
         body: `**Transfer time = data size ÷ usable bandwidth.** Convert carefully: 1 byte = 8 bits, and 1 Gbps moves about 125 MB per second, roughly **10.8 TB per day** at 100% utilisation. Real links rarely give you 100%, especially if production traffic shares them.
 
-Rule of thumb: **if it would take more than about a week over the network, or the link is needed for the business, ship a device.** If the scenario gives you a data size, a link speed and a deadline, compute it; the numbers usually make the answer obvious.`,
+Rule of thumb: **if it would take more than about a week over the network, or the link is needed for the business, ship a device.** If the scenario gives you a data size, a link speed and a deadline, compute it; the numbers usually make the answer obvious.
+
+Worked example: 200 TB, a 1 Gbps link, 80% usable. 1 Gbps × 0.8 = 800 Mbps = 100 MB/s, about **8.6 TB per day**, so 200 TB takes about **23 days**. With a 14-day deadline, the network loses and Snowball wins.
+
+Remember the device has its own clock too: ordering, receiving, loading and shipping a Snowball typically takes **around a week or more end to end**. So when the network math fits comfortably inside the deadline (for example 10 TB at 250 Mbps is under 4 days), stay online with DataSync: one tool, no shipping. Two other distractors: **Transfer Acceleration** cannot push data faster than your own pipe, and **ordering a new Direct Connect connection** usually takes weeks to months to provision, so it never rescues a short deadline.`,
         table: {
           headers: ['Data', '50 Mbps', '100 Mbps', '1 Gbps', '10 Gbps'],
           rows: [
@@ -1772,7 +1865,9 @@ Details the exam uses:
 - **Snowball Edge Storage Optimized**: about **80 TB** usable on the long-standing model (a 210 TB NVMe model arrived in 2024). Order several devices in parallel for petabytes.
 - **Snowball Edge Compute Optimized**: more vCPUs and optional GPU for **edge computing** in disconnected places (ships, mines, field hospitals), running EC2 instances and Lambda locally.
 - Data lands in **S3**, not directly in Glacier. To archive, import to S3 and add a lifecycle rule.
-- **Retired devices**: Snowmobile (the 100 PB truck) and Snowcone (the small 8 TB device) are no longer offered; an exam option naming them is outdated.`,
+- **Retired devices**: Snowmobile (the 100 PB truck) and Snowcone (the small 8 TB device) are no longer offered; an exam option naming them is outdated.
+
+**Disconnected sites: why only Snowball fits.** A site with **no network at all** (a mine, a ship) rules out every online tool. DataSync and Storage Gateway both need a network path to AWS to move data. **AWS Outposts** (AWS racks installed in your datacenter) also needs a constant connection back to its parent Region, so it fails too. Snowball Edge Compute Optimized can run EC2-compatible instances locally (for example ML inference to discard bad footage) and then carries the filtered data to AWS physically.`,
       },
       {
         heading: 'AWS Transfer Family: keep partners on SFTP',
@@ -1990,7 +2085,9 @@ Old negatives go to cheaper back rooms, then an off-site vault, and are destroye
 
 **Alternatives considered**:
 
-- **Upload through EC2 behind an ALB**: works, but every byte crosses your fleet; you pay for instances and bandwidth and must scale them for upload spikes.
+- **Upload through EC2 behind an ALB**: works, but every byte crosses your fleet; you pay for instances and bandwidth and must scale them for upload spikes. Adding more or bigger instances treats the symptom, not the cause.
+- **Upload through API Gateway to Lambda**: API Gateway caps the request payload at **10 MB**, so 20 to 200 MB files can't pass through it at all. API Gateway's job here is to return the presigned URL, not to carry the file.
+- **Stage uploads on EFS, then copy to S3**: adds a copy step and still routes bytes through your servers.
 - **A bucket per Region near users**: lower latency, but you then have to aggregate data and manage many buckets. Acceleration gets most of the benefit with one bucket.
 - **Transfer Family SFTP**: right for B2B partners with existing SFTP tooling, wrong for browsers and mobile apps.`,
       },
@@ -2008,7 +2105,11 @@ Old negatives go to cheaper back rooms, then an off-site vault, and are destroye
 
 - **Native S3 → Lambda notification**: simpler and fine for one consumer; harder to extend.
 - **S3 → SQS → EC2 or ECS workers**: better for long jobs (Lambda's limit is 15 minutes) or to smooth huge bursts; more to operate.
-- **Video**: for transcoding, the managed answer is **AWS Elemental MediaConvert** triggered the same way.`,
+- **Polling with an EC2 cron job** that lists the bucket: adds delay and servers, and listing a huge bucket is slow and costs requests. Events replace polling.
+
+**Video is a special case.** Streaming video to many devices uses **adaptive bitrate (ABR)** formats such as **HLS** (HTTP Live Streaming): the video is encoded into several quality levels cut into short segments, and the player switches level as the viewer's bandwidth changes. Producing those renditions (**transcoding**) for an hour-long recording can take longer than **Lambda's 15-minute maximum**, so "run ffmpeg in Lambda" fails for long videos, and a self-managed ffmpeg fleet on EC2 is the operational overhead the exam wants you to avoid.
+
+The managed answer is **AWS Elemental MediaConvert**: a file-based transcoding service with no servers and no per-job time limit, which outputs HLS (and other formats) to S3 for CloudFront to stream. Trigger it the same event-driven way (S3 event, directly or through EventBridge, usually with a small Lambda that submits the job). **Amazon Elastic Transcoder**, the older service, has been discontinued; AWS directs customers to MediaConvert, so an option naming it is outdated.`,
       },
       {
         heading: 'Tier 3: serving (R4)',
@@ -2177,6 +2278,8 @@ Old negatives go to cheaper back rooms, then an off-site vault, and are destroye
       'Map every requirement phrase to one feature before reading the options; most wrong options fail exactly one requirement.',
       '"Users upload large files directly without going through the web servers" → presigned URLs (with Transfer Acceleration for global users).',
       '"Generate thumbnails for every uploaded image, serverless" → S3 event (via EventBridge or directly) → Lambda writing to a separate bucket.',
+      '"Transcode long videos to HLS automatically, least overhead" → S3 event → AWS Elemental MediaConvert, output served by CloudFront. Lambda times out at 15 minutes; Elastic Transcoder is discontinued.',
+      '"Uploads of files over 10 MB through API Gateway" → impossible (10 MB payload cap); return a presigned URL instead.',
       '"Serve images globally with low latency while keeping the bucket private" → CloudFront with OAC.',
       '"Keep originals 10 years, unalterable by anyone, cheapest storage over time" → Object Lock Compliance + lifecycle down to Deep Archive + expiration at 10 years.',
       '"On-prem editors need low-latency file access to data stored in S3" → S3 File Gateway; "initial 60 TB load over a slow link" → Snowball Edge.',
