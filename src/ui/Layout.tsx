@@ -54,9 +54,12 @@ export function Layout({ children }: { children: ReactNode }) {
           <span title={sync === 'file' ? 'Saved to progress/progress.json' : sync === 'local-only' ? 'Saved in this browser only (no dev server)' : sync}>
             {sync === 'file' ? '● Synced to progress.json' : sync === 'saving' ? '◌ Saving…' : sync === 'error' ? '▲ Save failed' : '● Browser storage'}
           </span>
-          <button className="px-2 py-1 rounded hover:bg-sunk" onClick={() => setProfile({ theme: theme === 'dark' ? 'light' : 'dark' })} aria-label="Toggle dark mode">
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
+          <span className="flex items-center">
+            <Link to="/profile" className="px-2 py-1 rounded hover:bg-sunk text-base" onClick={() => setNavOpen(false)} aria-label="Settings" title="Settings: name, exam date, study hours">⚙️</Link>
+            <button className="px-2 py-1 rounded hover:bg-sunk" onClick={() => setProfile({ theme: theme === 'dark' ? 'light' : 'dark' })} aria-label="Toggle dark mode">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </span>
         </div>
       </aside>
       {navOpen && <div className={`fixed inset-0 z-30 bg-black/30 ${focusing ? '' : 'lg:hidden'}`} onClick={() => setNavOpen(false)} />}
